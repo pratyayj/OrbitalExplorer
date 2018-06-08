@@ -30,7 +30,7 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        mGoSignin = findViewById(R.id.textViewGoSignup);
+        mGoSignin = findViewById(R.id.textViewGoSignin);
         mEditTextEmail = findViewById(R.id.editTextEmailSignup);
         mEditTextPw = findViewById(R.id.editTextPasswordSignup);
         mButtonSignup = findViewById(R.id.buttonSignup);
@@ -85,7 +85,7 @@ public class SignupActivity extends AppCompatActivity {
      * @param view The view it is coming from.
      */
     public void goSignin(View view){
-        Intent intent = new Intent(this, SignupActivity.class);
+        Intent intent = new Intent(this, SigninActivity.class);
         startActivity(intent);
     }
 
