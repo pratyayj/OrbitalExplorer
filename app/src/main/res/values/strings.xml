@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">OrbitalExplorer</string>
+    <string name="signup_page_title">Let\'s get started!</string>
+    <string name="email_hint">E-mail</string>
+    <string name="password_hint">Password</string>
+    <string name="signup_button">Let\'s go!</string>
 </resources>
