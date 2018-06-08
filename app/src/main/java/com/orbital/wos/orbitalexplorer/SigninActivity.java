@@ -4,34 +4,33 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
-public class SignupActivity extends AppCompatActivity {
+public class SigninActivity extends AppCompatActivity {
 
-    private TextView mGoSignin;
+    private TextView mGoSignup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        setContentView(R.layout.activity_signin);
 
-        mGoSignin = findViewById(R.id.textViewGoSignup);
-        mGoSignin.setOnClickListener(new View.OnClickListener() {
+        mGoSignup = findViewById(R.id.textViewGoSignup);
+        mGoSignup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                goSignin(v);
+                goSignup(v);
             }
         });
     }
 
     /**
-     * Method that takes the user to the Signin page if they already
+     * Method that takes the user to the Signup page if they do not
      * have an account.
      * @param view The view it is coming from.
      */
-    public void goSignin(View view){
+    public void goSignup(View view){
         Intent intent = new Intent(this, SignupActivity.class);
         startActivity(intent);
     }
-
-
 }

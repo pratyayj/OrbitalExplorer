@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "704815960081",
+    "firebase_url": "https://orbitalexplorer-206609.firebaseio.com",
+    "project_id": "orbitalexplorer-206609",
+    "storage_bucket": "orbitalexplorer-206609.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:704815960081:android:83d25dcd1962347f",
+        "android_client_info": {
+          "package_name": "com.orbital.wos.orbitalexplorer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "704815960081-7uit9ob86nq2b1pnp9u0sfnnqqggcbr6.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "704815960081-7uit9ob86nq2b1pnp9u0sfnnqqggcbr6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMSxSzeb-BKXwW3GKnxYbiIjgkXCjyOb8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
