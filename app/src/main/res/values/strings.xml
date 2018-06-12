@@ -13,5 +13,5 @@
     <string name="email_hint">E-mail</string>
     <string name="password_hint">Password</string>
 
-    <string name="default_web_client_id">704815960081-7uit9ob86nq2b1pnp9u0sfnnqqggcbr6.apps.googleusercontent.com</string>
+    <string name="signout_button">Sign out</string>
 </resources>

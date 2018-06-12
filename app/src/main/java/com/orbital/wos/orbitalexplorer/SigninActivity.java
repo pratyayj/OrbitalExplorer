@@ -17,6 +17,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,7 +34,7 @@ public class SigninActivity extends AppCompatActivity {
     private EditText mEditTextEmail;
     private EditText mEditTextPw;
     private Button mButtonSignin;
-    private Button mButtonGoogleSignin;
+    private SignInButton mButtonGoogleSignin;
     private GoogleApiClient mGoogleApiClient;
     private GoogleSignInClient mGoogleSignInClient;
     private int RC_SIGN_IN = 1;
@@ -53,6 +54,9 @@ public class SigninActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
+        /*
+         * This is to sign in a user using conventional e-mail and password.
+         */
         mButtonSignin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,13 +89,9 @@ public class SigninActivity extends AppCompatActivity {
             }
         });
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
+        /*
+          This sets what the Google Sign In button does.
+         */
         mButtonGoogleSignin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,6 +99,19 @@ public class SigninActivity extends AppCompatActivity {
             }
         });
 
+        /*
+          This builds the GoogleSignInOptions object (which will then request for the
+          specific e-mail to sign in with).
+         */
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        // Following which the GoogleSignInClient is created using the GoogleSignInOptions object.
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        // This directs the user to the sign up page for normal user e-mail sign up.
         mGoSignup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 goSignup(v);
@@ -116,10 +129,21 @@ public class SigninActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * This method begins the sign in process with Google.
+     */
     private void signInWithGoogle() {
         Intent intent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(intent, RC_SIGN_IN);
     }
+
+    /**
+     * This method carries on the Google Sign In process upon receiving the
+     * result from the previous Activity.
+     * @param requestCode The request code from the previous Activity.
+     * @param resultCode  The code produced as a result of the previous Activity.
+     * @param data The data passed as an Intent to create the task for Google Sign In.
+     */
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -137,27 +161,15 @@ public class SigninActivity extends AppCompatActivity {
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w("FailedGoogleSignin", "Google sign in failed", e);
-                // ...
             }
         }
     }
 
-    /* private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
-            // Signed in successfully, show authenticated UI.
-            startActivity(new Intent(SigninActivity.this, MainActivity.class));
-            finish();
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w("GoogleSigninFail", "signInResult:failed code=" + e.getStatusCode());
-            startActivity(new Intent(SigninActivity.this, SigninActivity.class));
-            finish();
-        }
-    } */
-
+    /**
+     * This method sets up the Google account used to sign in within the Firebase
+     * database used to store all user accounts for the application.
+     * @param acct GoogleSignInAccount used to sign in to the application.
+     */
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d("firebaseAuthWithGoogle", "firebaseAuthWithGoogle:" + acct.getId());
 
@@ -177,10 +189,31 @@ public class SigninActivity extends AppCompatActivity {
                             Toast.makeText(SigninActivity.this, "Authentication with Google failed", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(SigninActivity.this, SignupActivity.class));
                         }
-
-                        // ...
                     }
                 });
+    }
+
+    /**
+     * This method checks upon the start of this Activity if there is any user currently logged in.
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        // User can be of any type - not necessarily Google login.
+        FirebaseUser user = auth.getCurrentUser();
+        if (user == null) {
+            return;
+        } else {
+            updateUI();
+        }
+    }
+
+    /**
+     * This method updates the UI if there is a user logged in by switching to the MainActivity.
+     */
+    public void updateUI() {
+        startActivity(new Intent(SigninActivity.this, MainActivity.class));
     }
 
 }

@@ -37,6 +37,9 @@ public class SignupActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
+        /*
+         * This is to sign up a user using conventional e-mail and password.
+         */
         mButtonSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
