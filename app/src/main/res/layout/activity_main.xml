@@ -10,9 +10,32 @@
         android:id="@+id/buttonSignout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="@string/signout_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/sampleHeader"
+        app:layout_constraintVertical_bias="0.825" />
+
+    <TextView
+        android:id="@+id/sampleHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="92dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sampleImage" />
+
+    <ImageView
+        android:id="@+id/sampleImage"
+        android:layout_width="205dp"
+        android:layout_height="107dp"
+        android:layout_marginTop="148dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:color/holo_green_light" />
 </android.support.constraint.ConstraintLayout>
