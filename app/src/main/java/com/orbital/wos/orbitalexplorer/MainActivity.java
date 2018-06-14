@@ -42,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        signout = findViewById(R.id.buttonSignout);
-        sampleHeader = findViewById(R.id.sampleHeader);
-        sampleImage = findViewById(R.id.sampleImage);
+        // signout = findViewById(R.id.buttonSignout);
+        sampleHeader = findViewById(R.id.text);
+        sampleImage = findViewById(R.id.photo);
 
         firebaseDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -55,12 +55,12 @@ public class MainActivity extends AppCompatActivity {
                 .into(sampleImage);
 
 
-        signout.setOnClickListener(new View.OnClickListener() {
+        /* signout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 userSignout();
             }
-        });
+        }); */
 
         DatabaseReference test = firebaseDatabase.child("headers");
         test.addValueEventListener(new ValueEventListener() {
