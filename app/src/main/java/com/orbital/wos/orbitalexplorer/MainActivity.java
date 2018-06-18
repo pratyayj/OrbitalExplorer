@@ -96,12 +96,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
                     TrailGrouper tg = new TrailGrouper();
-                    String header = String.valueOf(dataSnap.child("header").getValue());
-                    String description = String.valueOf(dataSnap.child("description").getValue());
-                    String photouri = String.valueOf(dataSnap.child("photouri").getValue());
-                    tg.setHeader(header);
-                    tg.setDescription(description);
-                    tg.setPhotouri(photouri);
+                    tg = dataSnap.getValue(TrailGrouper.class);
                     trailGroupsCallback.onCallBack(tg);
                 }
             }
