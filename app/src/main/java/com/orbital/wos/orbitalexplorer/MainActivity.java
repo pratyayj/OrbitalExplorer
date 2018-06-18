@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // signout = findViewById(R.id.buttonSignout);
-        sampleHeader = findViewById(R.id.text);
-        sampleImage = findViewById(R.id.photo);
 
         firebaseDatabase = FirebaseDatabase.getInstance().getReference();
 

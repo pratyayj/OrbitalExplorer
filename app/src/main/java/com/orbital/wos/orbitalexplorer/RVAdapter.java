@@ -9,12 +9,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.util.List;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TrailGrouperHolder> {
 
     private List<TrailGrouper> trailGroups;
     private Context mContext;
+    private StorageReference storageReference;
 
 
     public RVAdapter(Context context, List<TrailGrouper> trailGroups){
@@ -35,7 +40,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TrailGrouperHolder
         final TrailGrouper trailGrouper = trailGroups.get(i);
         trailGrouperHolder.header.setText(trailGrouper.getHeader());
         trailGrouperHolder.description.setText(trailGrouper.getDescription());
-
+        storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(trailGrouper.getPhotouri());
+        Glide.with(mContext)
+                .load(storageReference)
+                .into(trailGrouperHolder.photo);
         // TO CREATE ONCLICKLISTENER to go to grouped views of trails.
     }
 
