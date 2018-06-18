@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,6 +31,8 @@ import com.google.firebase.storage.StorageReference;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference firebaseDatabase;
     private ImageView sampleImage;
     private StorageReference storageReference;
+    private RecyclerView mRvTrailGrouper;
+    private RVAdapter rvAdapter;
+    private List<TrailGrouper> trailGroups;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +58,28 @@ public class MainActivity extends AppCompatActivity {
 
         storageReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://orbitalexplorer-206609.appspot.com/BostonSkyline.jpg");
 
-        Glide.with(this)
+        trailGroups = new ArrayList<TrailGrouper>();
+
+        mRvTrailGrouper =  findViewById(R.id.rv);
+        mRvTrailGrouper.setHasFixedSize(true);
+        rvAdapter = new RVAdapter(this, trailGroups);
+        mRvTrailGrouper.setAdapter(rvAdapter);
+
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        mRvTrailGrouper.setLayoutManager(llm);
+
+        getFirebaseData(new TrailGroupsCallback() {
+            @Override
+            public void onCallBack(TrailGrouper trailGrouper) {
+                trailGroups.add(trailGrouper);
+                rvAdapter.notifyDataSetChanged();
+            }
+        });
+
+        /* Glide.with(this)
                 .load(storageReference)
                 .into(sampleImage);
-
+        */
 
         /* signout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,20 +88,30 @@ public class MainActivity extends AppCompatActivity {
             }
         }); */
 
-        DatabaseReference test = firebaseDatabase.child("headers");
-        test.addValueEventListener(new ValueEventListener() {
+    }
+
+    private void getFirebaseData(final TrailGroupsCallback trailGroupsCallback) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference notesRef = reference.child("groups");
+        notesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String header = dataSnapshot.getValue(String.class);
-                sampleHeader.setText(header);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
+                    TrailGrouper tg = new TrailGrouper();
+                    String header = String.valueOf(dataSnap.child("header").getValue());
+                    String description = String.valueOf(dataSnap.child("description").getValue());
+                    String photouri = String.valueOf(dataSnap.child("photouri").getValue());
+                    tg.setHeader(header);
+                    tg.setDescription(description);
+                    tg.setPhotouri(photouri);
+                    trailGroupsCallback.onCallBack(tg);
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
-
     }
 
     public void userSignout() {
