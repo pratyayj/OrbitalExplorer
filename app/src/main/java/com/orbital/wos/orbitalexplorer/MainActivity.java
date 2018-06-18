@@ -6,10 +6,17 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,13 +24,14 @@ public class MainActivity extends AppCompatActivity {
     EditText editTextRating;
     EditText editTextDescription;
     Button buttonAddTrail;
-//    ListView listViewTrails;
-//
-//    //a list to store all the artist from firebase database
-//    List<Trail> trails;
 
     //our database reference object
     DatabaseReference databaseTrails;
+
+    ListView listViewTrails;
+
+    //a list to store all the artist from firebase database
+    List<Trail> trailList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +45,13 @@ public class MainActivity extends AppCompatActivity {
         editTextName = (EditText) findViewById(R.id.editTextName);
         editTextRating = (EditText) findViewById(R.id.editTextRating);
         editTextDescription = (EditText) findViewById(R.id.editTextDescription);
-//        listViewTrails = (ListView) findViewById(R.id.listViewTrails);
+
+        listViewTrails = (ListView) findViewById(R.id.listViewTrails);
 
         buttonAddTrail = (Button) findViewById(R.id.buttonAddTrail);
 
-//        //list to store trails
-//        trails = new ArrayList<>();
-
+        //list to store trails
+        trailList = new ArrayList<>();
 
         //adding an onclicklistener to button
         buttonAddTrail.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +61,34 @@ public class MainActivity extends AppCompatActivity {
                 //the method is defined below
                 //this method is actually performing the write operation
                 addTrail();
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        databaseTrails.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                trailList.clear();
+
+                //fetches all data from the Firebase database to be displayed
+                for (DataSnapshot trailSnapshot: dataSnapshot.getChildren()) {
+                    Trail trail = trailSnapshot.getValue(Trail.class);
+
+                    trailList.add(trail);
+                }
+
+                TrailList adapter = new TrailList(MainActivity.this, trailList);
+                listViewTrails.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }
