@@ -42,47 +42,5 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        signout = findViewById(R.id.buttonSignout);
-        sampleHeader = findViewById(R.id.sampleHeader);
-        sampleImage = findViewById(R.id.sampleImage);
-
-        firebaseDatabase = FirebaseDatabase.getInstance().getReference();
-
-        storageReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://orbitalexplorer-206609.appspot.com/BostonSkyline.jpg");
-
-        Glide.with(this)
-                .load(storageReference)
-                .into(sampleImage);
-
-
-        signout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                userSignout();
-            }
-        });
-
-        DatabaseReference test = firebaseDatabase.child("headers");
-        test.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String header = dataSnapshot.getValue(String.class);
-                sampleHeader.setText(header);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
     }
-
-    public void userSignout() {
-        FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(MainActivity.this, SigninActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
 }
