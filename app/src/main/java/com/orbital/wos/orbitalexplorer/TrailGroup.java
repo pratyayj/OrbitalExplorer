@@ -21,11 +21,13 @@ public class TrailGroup {
     private String header;
     private String description;
     private String photouri;
+    private int index;
 
-    public TrailGroup(String inputHeader, String inputDescription, String inputPhotouri) {
+    public TrailGroup(String inputHeader, String inputDescription, String inputPhotouri, int inputIndex) {
         header = inputHeader;
         description = inputDescription;
         photouri = inputPhotouri;
+        index = inputIndex;
     }
 
     public TrailGroup() {
@@ -44,6 +46,10 @@ public class TrailGroup {
         this.photouri = photouri;
     }
 
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
     public String getHeader() {
         return header;
     }
@@ -54,5 +60,9 @@ public class TrailGroup {
 
     public String getPhotouri() {
         return photouri;
+    }
+
+    public int getIndex() {
+        return index;
     }
 }

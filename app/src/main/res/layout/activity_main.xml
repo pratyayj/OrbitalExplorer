@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
                 android:background="@color/colorPrimary"
-                android:theme="@style/ThemeOverlay.AppCompat.ActionBar" >
+                android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
                 <TextView
                     android:id="@+id/toolbar_title"
@@ -42,8 +42,10 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv"
             android:layout_width="match_parent"
-            android:layout_height="443dp"
+            android:layout_height="448dp"
             android:layout_marginTop="8dp"
+            android:clipToPadding="true"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="@font/roboto_thin"
             android:text="@string/lets_explore"
             android:textColor="@android:color/black"

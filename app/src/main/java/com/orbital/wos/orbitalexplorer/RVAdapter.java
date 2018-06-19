@@ -3,16 +3,19 @@ package com.orbital.wos.orbitalexplorer;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -63,7 +66,13 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TrailGroupHolder> 
         Glide.with(mContext)
                 .load(photoStorageReference)
                 .into(trailGrouperHolder.photo);
-        // TO CREATE ONCLICKLISTENER to go to grouped views of trails.
+
+        trailGrouperHolder.setRecyclerViewClickListener(new RecyclerViewClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Toast.makeText(mContext, "CLICKED", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -79,12 +88,14 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TrailGroupHolder> 
     /**
      * The holder class that keeps all the Views together.
      */
-    public static class TrailGroupHolder extends RecyclerView.ViewHolder {
+    public static class TrailGroupHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         CardView cv;
         TextView header;
         TextView description;
         ImageView photo;
+
+        RecyclerViewClickListener recyclerViewClickListener;
 
         TrailGroupHolder(View view) {
             super(view);
@@ -92,8 +103,18 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TrailGroupHolder> 
             header = itemView.findViewById(R.id.header);
             description = itemView.findViewById(R.id.description);
             photo = itemView.findViewById(R.id.photo);
+
+            view.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View v) {
+            recyclerViewClickListener.onClick(v, getAdapterPosition());
+        }
+
+        public void setRecyclerViewClickListener(RecyclerViewClickListener rvcl) {
+            this.recyclerViewClickListener = rvcl;
+        }
     }
 
 

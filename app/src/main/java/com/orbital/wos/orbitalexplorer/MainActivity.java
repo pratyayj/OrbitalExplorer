@@ -39,6 +39,7 @@ import com.firebase.ui.storage.images.FirebaseImageLoader;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -59,6 +60,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /**
+         * This group of method calls and assignments relate to
+         * the ActionBar and ToolBar.
+         */
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
@@ -68,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_grey_24dp);
         mDrawerLayout = findViewById(R.id.drawer_layout);
-
 
 
         // signout = findViewById(R.id.buttonSignout);
@@ -97,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCallBack(TrailGroup trailGroup) {
                 trailGroups.add(trailGroup);
+                Collections.sort(trailGroups, new TrailGroupComparator());
                 rvAdapter.notifyDataSetChanged();
             }
         });
