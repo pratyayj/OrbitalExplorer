@@ -1,16 +1,21 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="AppTheme.ButtonSignUp" parent="AppTheme">
         <item name="colorButtonNormal">@color/colorSignButton</item>
         <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="AppTheme.ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimaryDark">@color/colorPurpleLLL</item>
+        <item name="colorPrimary">@color/colorYellowLLL</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
 </resources>

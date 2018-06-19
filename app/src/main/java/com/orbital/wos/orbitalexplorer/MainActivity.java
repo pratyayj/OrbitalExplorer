@@ -3,15 +3,22 @@ package com.orbital.wos.orbitalexplorer;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Registry;
@@ -37,47 +44,62 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private Button signout;
-    private TextView sampleHeader;
+    private DrawerLayout mDrawerLayout;
+    private SearchView mSearchView;
+
     private DatabaseReference firebaseDatabase;
-    private ImageView sampleImage;
-    private StorageReference storageReference;
+
+    // The following are variables that are related to the RecyclerView.
     private RecyclerView mRvTrailGrouper;
     private RVAdapter rvAdapter;
-    private List<TrailGrouper> trailGroups;
+    private List<TrailGroup> trailGroups;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayShowTitleEnabled(false);
+        toolbar.setTitle("");
+        toolbar.setSubtitle("");
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_grey_24dp);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+
+
+
         // signout = findViewById(R.id.buttonSignout);
 
+        // Assigns the Firebase Database for app to the local variable firebaseDatabase.
         firebaseDatabase = FirebaseDatabase.getInstance().getReference();
 
-        storageReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://orbitalexplorer-206609.appspot.com/BostonSkyline.jpg");
+        // Creates an array list of all the trail groups.
+        trailGroups = new ArrayList<TrailGroup>();
 
-        trailGroups = new ArrayList<TrailGrouper>();
-
+        /* All the trail groups will be shown in a RecyclerView. This here is the setup of
+        of the layout and adapters that will be used.
+         */
         mRvTrailGrouper =  findViewById(R.id.rv);
         mRvTrailGrouper.setHasFixedSize(true);
         rvAdapter = new RVAdapter(this, trailGroups);
         mRvTrailGrouper.setAdapter(rvAdapter);
-
         LinearLayoutManager llm = new LinearLayoutManager(this);
         mRvTrailGrouper.setLayoutManager(llm);
 
+        /*
+        The getFirebaseData method helps to create to add each group of trails to the List object
+        holding all these trails.
+         */
         getFirebaseData(new TrailGroupsCallback() {
             @Override
-            public void onCallBack(TrailGrouper trailGrouper) {
-                trailGroups.add(trailGrouper);
+            public void onCallBack(TrailGroup trailGroup) {
+                trailGroups.add(trailGroup);
                 rvAdapter.notifyDataSetChanged();
             }
         });
-
-        /* Glide.with(this)
-                .load(storageReference)
-                .into(sampleImage);
-        */
 
         /* signout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,15 +110,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This method takes in the
+     * @param trailGroupsCallback Callback object that has the onCallBack method (defined in
+     *                            the method call in onCreate) that runs when each
+     *                            TrailGrouper object is passed in.
+     */
     private void getFirebaseData(final TrailGroupsCallback trailGroupsCallback) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference notesRef = reference.child("groups");
-        notesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference trailGroups = firebaseDatabase.child("groups");
+        trailGroups.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
-                    TrailGrouper tg = new TrailGrouper();
-                    tg = dataSnap.getValue(TrailGrouper.class);
+                    TrailGroup tg = new TrailGroup();
+                    tg = dataSnap.getValue(TrailGroup.class);
                     trailGroupsCallback.onCallBack(tg);
                 }
             }
@@ -112,6 +139,42 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, SigninActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+        MenuItem mSearch = menu.findItem(R.id.action_search);
+
+        mSearchView = (SearchView) mSearch.getActionView();
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // TO FILL
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // TO FILL
+
+                return true;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 
 }

@@ -18,14 +18,14 @@ import java.util.List;
  * This is the class that models the TrailGroup object.
  */
 public class TrailGroup {
-    String header;
-    String description;
-    String photouri;
+    private String header;
+    private String description;
+    private String photouri;
 
-    public TrailGroup(String inputHeader, String inputDescription, String photouri) {
+    public TrailGroup(String inputHeader, String inputDescription, String inputPhotouri) {
         header = inputHeader;
         description = inputDescription;
-        photouri = photouri;
+        photouri = inputPhotouri;
     }
 
     public TrailGroup() {

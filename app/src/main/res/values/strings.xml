@@ -14,4 +14,10 @@
     <string name="password_hint">Password</string>
 
     <string name="signout_button">Sign out</string>
+
+    <!-- Home screen related. -->
+    <string name="lets_explore">Ready to explore?</string>
+
+    <!-- Navigation drawer related. -->
+    <string name="home">Home</string>
 </resources>

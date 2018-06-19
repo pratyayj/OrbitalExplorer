@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#FFFCFF</color>
+    <color name="colorPrimaryDark">#E1C8C3</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorSignButton">#70C1B3</color>
     <color name="white">#FFFFFF</color>
+
+    <!-- La La Land color scheme -->
+    <color name="colorPurpleLLL">#4865b1</color>
+    <color name="colorYellowLLL">#f1e345</color>
+
+    <!-- Handmaiden color scheme -->
+    <color name="offWhiteHM">#FFFCFF</color>
+    <color name="beigeHM">#E1C8C3</color>
+    <color name="purpleHM">#2F3269</color>
+    <color name="sheerBlackHM">#051316</color>
 </resources>
