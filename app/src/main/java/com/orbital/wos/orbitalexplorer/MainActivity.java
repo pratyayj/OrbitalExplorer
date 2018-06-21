@@ -3,6 +3,7 @@ package com.orbital.wos.orbitalexplorer;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -36,6 +37,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+
+import org.w3c.dom.Text;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -73,6 +76,32 @@ public class MainActivity extends AppCompatActivity {
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_grey_24dp);
         mDrawerLayout = findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                item.setChecked(true);
+                mDrawerLayout.closeDrawers();
+
+                int menuId = item.getItemId();
+
+                switch(menuId) {
+                    case R.id.signout:
+                        userSignout();
+                        break;
+                }
+                return false;
+            }
+        });
+
+
+        // Setting user's name as header text in drawer.
+        View headerView = navigationView.getHeaderView(0);
+        TextView navHeaderName = headerView.findViewById(R.id.name);
+        navHeaderName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+
+
 
 
         // signout = findViewById(R.id.buttonSignout);
@@ -139,6 +168,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * To sign user out.
+     */
     public void userSignout() {
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(MainActivity.this, SigninActivity.class);

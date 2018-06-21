@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OrbitalExplorer</string>
+    <string name="app_name">jalan jalan</string>
 
     <!-- Signup and signin pages related. -->
     <string name="signup_page_title">Let\'s get started!</string>
@@ -20,4 +20,6 @@
 
     <!-- Navigation drawer related. -->
     <string name="home">Home</string>
+    <string name="signout">Sign Out</string>
+
 </resources>
