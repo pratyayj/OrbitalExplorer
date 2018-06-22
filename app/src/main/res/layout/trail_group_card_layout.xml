@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cardViewTI"
+    android:id="@+id/cardViewMain"
     android:layout_width="354dp"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
+    android:layout_height="160dp"
     android:layout_marginEnd="16dp"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     android:layout_marginStart="16dp"
+    android:layout_marginBottom="16dp"
     card_view:cardElevation="8dp"
     card_view:layout_constraintEnd_toEndOf="parent"
     card_view:layout_constraintStart_toStartOf="parent"
@@ -16,22 +17,22 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" >
 
         <ImageView
-            android:id="@+id/trailInfoPhoto"
+            android:id="@+id/photo"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop" />
 
         <TextView
-            android:id="@+id/trailInfoTitle"
+            android:id="@+id/header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/trailInfoDescription"
             android:layout_alignStart="@+id/trailInfoDescription"
             android:fontFamily="@font/pacifico"
-            android:textColor="@android:color/black"
+            android:textColor="@color/white"
             android:textSize="24sp" />
 
         <TextView
@@ -43,20 +44,8 @@
             android:layout_marginBottom="18dp"
             android:layout_marginStart="30dp"
             android:fontFamily="@font/roboto_thin"
-            android:textColor="@android:color/black"
+            android:textColor="@color/white"
             android:textSize="18sp" />
-
-        <RatingBar
-            android:id="@+id/ratingBar"
-            style="@style/customRatingBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="113dp"
-            android:layout_marginEnd="25dp"
-            android:numStars="5"
-            android:stepSize="1.0" />
 
     </RelativeLayout>
 

@@ -4,7 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".SearchPageActivity">
+        tools:context=".FilterPageActivity">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/AppBarLayout"
@@ -31,13 +31,16 @@
         </android.support.design.widget.AppBarLayout>
 
     <TextView
-        android:id="@+id/testingTextView"
+        android:id="@+id/filterActivityTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Select your filters"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/roboto_thin"
+        android:text="@string/choose_filters"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/AppBarLayout" />
 
@@ -49,17 +52,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/testingTextView">
+        app:layout_constraintTop_toBottomOf="@+id/filterActivityTitle">
 
         <TextView
             android:id="@+id/duration_title"
-            android:layout_width="199dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/filter_label_background"
-            android:text="Duration"
-            android:textColor="@color/white" />
+            android:fontFamily="@font/quicksand"
+            android:text="@string/duration"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
         <RadioGroup
             android:id="@+id/radioGroupDuration"
@@ -73,7 +79,8 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:text="Short" />
+                android:fontFamily="@font/quicksand"
+                android:text="@string/durationShort" />
 
             <RadioButton
                 android:id="@+id/durationB"
@@ -82,7 +89,8 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:text="Medium" />
+                android:fontFamily="@font/quicksand"
+                android:text="@string/durationMedium" />
 
             <RadioButton
                 android:id="@+id/durationC"
@@ -91,18 +99,22 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:text="Long" />
+                android:fontFamily="@font/quicksand"
+                android:text="@string/durationLong" />
         </RadioGroup>
 
         <TextView
             android:id="@+id/type_title"
-            android:layout_width="199dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/filter_label_background"
-            android:text="Type"
-            android:textColor="@color/white" />
+            android:fontFamily="@font/quicksand"
+            android:text="@string/type"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
         <RadioGroup
             android:id="@+id/radioGroupType"
@@ -116,7 +128,8 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:text="Nature" />
+                android:fontFamily="@font/quicksand"
+                android:text="@string/typeNature" />
 
             <RadioButton
                 android:id="@+id/typeB"
@@ -125,7 +138,8 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:text="Urban" />
+                android:fontFamily="@font/quicksand"
+                android:text="@string/typeUrban" />
 
             <RadioButton
                 android:id="@+id/typeC"
@@ -134,16 +148,20 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:text="A Bit of Both!" />
+                android:fontFamily="@font/quicksand"
+                android:text="@string/typeBoth" />
         </RadioGroup>
 
         <Button
             android:id="@+id/buttonDone"
             style="@style/AppTheme.ButtonFilter"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="LET'S GO!"
+            android:layout_gravity="center_horizontal"
+            android:drawableLeft="@drawable/ic_directions_run_white_24dp"
+            android:fontFamily="@font/roboto_thin"
+            android:text="@string/go"
             android:textStyle="bold"
             android:theme="@style/AppTheme.ButtonFilter" />
 

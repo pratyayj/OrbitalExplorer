@@ -1,6 +1,7 @@
 package com.orbital.wos.orbitalexplorer;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,7 +21,7 @@ import java.util.List;
  * This is the class that binds the data to the RecyclerView layout's specific Views. It retrieves
  * data and generates View objects based on the data. These View objects populate any adapter view.
  */
-public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TrailGroupHolder> {
+public class TrailGroupRVAdapter extends RecyclerView.Adapter<TrailGroupRVAdapter.TrailGroupHolder> {
 
     // List that stores the trail groups.
     private List<TrailGroup> trailGroups;
@@ -30,21 +31,22 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TrailGroupHolder> 
     private StorageReference photoStorageReference;
 
 
-    public RVAdapter(Context context, List<TrailGroup> trailGroups){
+    public TrailGroupRVAdapter(Context context, List<TrailGroup> trailGroups){
         this.mContext = context;
         this.trailGroups = trailGroups;
     }
 
     /**
-     * Inflation with the layout parameters (the card_layout) happens here.
+     * Inflation with the layout parameters (the trail_group_card_layout) happens here.
      * @param parent The ViewGroup into which the new View will be added after it is bound to an
      *               adapter position - in this case it is the RecyclerView view.
      * @param viewType Not used.
      * @return Returns the ViewHolder.
      */
     @Override
-    public TrailGroupHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_layout, parent, false);
+    @NonNull
+    public TrailGroupHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.trail_group_card_layout, parent, false);
         TrailGroupHolder tgh = new TrailGroupHolder(v);
         return tgh;
     }
@@ -56,18 +58,19 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TrailGroupHolder> 
      * @param i Position i in the list of TrailGroup.
      */
     @Override
-    public void onBindViewHolder(TrailGroupHolder trailGrouperHolder, int i) {
+    public void onBindViewHolder(@NonNull TrailGroupHolder trailGrouperHolder, int i) {
         final TrailGroup trailGroup = trailGroups.get(i);
-        trailGrouperHolder.header.setText(trailGroup.getHeader());
-        trailGrouperHolder.description.setText(trailGroup.getDescription());
+        trailGrouperHolder.groupHeader.setText(trailGroup.getHeader());
+        trailGrouperHolder.groupDescription.setText(trailGroup.getDescription());
         photoStorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(trailGroup.getPhotouri());
         Glide.with(mContext)
                 .load(photoStorageReference)
-                .into(trailGrouperHolder.photo);
+                .into(trailGrouperHolder.groupPhoto);
 
         trailGrouperHolder.setRecyclerViewClickListener(new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
+                // TO DO SOMETHING WHEN CLICKED.
                 Toast.makeText(mContext, "CLICKED", Toast.LENGTH_SHORT).show();
             }
         });
@@ -88,19 +91,19 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TrailGroupHolder> 
      */
     public static class TrailGroupHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        CardView cv;
-        TextView header;
-        TextView description;
-        ImageView photo;
+        CardView groupCardView;
+        TextView groupHeader;
+        TextView groupDescription;
+        ImageView groupPhoto;
 
         RecyclerViewClickListener recyclerViewClickListener;
 
         TrailGroupHolder(View view) {
             super(view);
-            cv = itemView.findViewById(R.id.cardViewMain);
-            header = itemView.findViewById(R.id.header);
-            description = itemView.findViewById(R.id.trailInfoDescription);
-            photo = itemView.findViewById(R.id.photo);
+            groupCardView = itemView.findViewById(R.id.cardViewMain);
+            groupHeader = itemView.findViewById(R.id.header);
+            groupDescription = itemView.findViewById(R.id.trailInfoDescription);
+            groupPhoto = itemView.findViewById(R.id.photo);
 
             view.setOnClickListener(this);
         }
@@ -110,7 +113,11 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TrailGroupHolder> 
             recyclerViewClickListener.onClick(v, getAdapterPosition());
         }
 
-        public void setRecyclerViewClickListener(RecyclerViewClickListener rvcl) {
+        /**
+         * This is used to set the listener for the RecyclerView.
+         * @param rvcl The RecyclerViewListener to be set for this holder.
+         */
+        protected void setRecyclerViewClickListener(RecyclerViewClickListener rvcl) {
             this.recyclerViewClickListener = rvcl;
         }
     }

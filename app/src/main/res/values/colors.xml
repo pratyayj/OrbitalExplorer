@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#FFFCFF</color>
     <color name="colorPrimaryDark">#E1C8C3</color>
+    <color name="pastelOrange">#FFB4A2</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorSignButton">#70C1B3</color>
     <color name="white">#ffffff</color>

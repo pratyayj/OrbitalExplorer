@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/filter"
+        android:id="@+id/filterMenu"
         android:icon="@drawable/ic_filter_list_grey_24dp"
-        android:title="Filter"
+        android:title="@string/filter"
         app:showAsAction="always"/>
 </menu>
