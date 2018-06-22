@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Button signout;
     private DrawerLayout mDrawerLayout;
-    private SearchView mSearchView;
+    private MenuItem mFilter;
 
     private DatabaseReference firebaseDatabase;
 
@@ -184,32 +184,19 @@ public class MainActivity extends AppCompatActivity {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
+            case R.id.filter:
+                Intent intent = new Intent(MainActivity.this, SearchPageActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_menu, menu);
-        MenuItem mSearch = menu.findItem(R.id.action_search);
-
-        mSearchView = (SearchView) mSearch.getActionView();
-
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // TO FILL
-
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // TO FILL
-
-                return true;
-            }
-        });
+        getMenuInflater().inflate(R.menu.filter_menu, menu);
+        mFilter = menu.findItem(R.id.filter);
 
         return super.onCreateOptionsMenu(menu);
     }

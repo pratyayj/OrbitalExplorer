@@ -29,14 +29,14 @@
                 android:id="@+id/header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/description"
-                android:layout_alignStart="@+id/description"
+                android:layout_above="@+id/trailInfoDescription"
+                android:layout_alignStart="@+id/trailInfoDescription"
                 android:fontFamily="@font/pacifico"
                 android:textColor="@color/white"
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/description"
+                android:id="@+id/trailInfoDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
