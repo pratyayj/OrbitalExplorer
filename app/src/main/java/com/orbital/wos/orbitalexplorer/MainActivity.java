@@ -84,6 +84,10 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.signout:
                         userSignout();
                         break;
+                    case R.id.filterDrawer:
+                        Intent intent = new Intent(MainActivity.this, FilterPageActivity.class);
+                        startActivity(intent);
+                        break;
                 }
                 return false;
             }

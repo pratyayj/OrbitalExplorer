@@ -17,6 +17,7 @@
 
     <!-- Home activity related. -->
     <string name="lets_explore">Ready to explore?</string>
+    <string name="about_groups">To get you started quickly, here\'s some trail groups!</string>
 
     <!-- Filter activity and results related. -->
     <string name="choose_filters">Select your filters.</string>
@@ -36,6 +37,6 @@
     <!-- Navigation drawer and toolbar related. -->
     <string name="home">Home</string>
     <string name="signout">Sign Out</string>
-    <string name="filter">Filter</string>
+    <string name="filter">Filter By Criteria</string>
 
 </resources>
