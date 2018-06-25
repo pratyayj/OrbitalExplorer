@@ -76,7 +76,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         mMap.setMyLocationEnabled(true);
                     }
                 } else { // permission is denied
-                    Toast.makeText(this, "Permission denied!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show();
                 } return;
         }
     }
@@ -95,7 +95,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
             // displays the map
             buildGoogleApiClient();
             // allows for my location to be found
@@ -148,7 +147,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-
         client.connect();
     }
 
