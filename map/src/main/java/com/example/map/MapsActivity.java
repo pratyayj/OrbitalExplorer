@@ -28,6 +28,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -100,6 +101,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // allows for my location to be found
             mMap.setMyLocationEnabled(true);
 
+            // allows for some UI settings which are turned off by default
+            UiSettings uiSettings = mMap.getUiSettings();
+            uiSettings.setCompassEnabled(true);
+            uiSettings.setZoomControlsEnabled(true);
         }
 
         // to change map type
@@ -170,7 +175,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         currentLocationMarker = mMap.addMarker(markerOptions);
 
         // move the camera to the location
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
+        float zoomLevel = 7.0f; //This goes up to 21
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, zoomLevel));
         mMap.animateCamera(CameraUpdateFactory.zoomBy(10));
 
         // if there is a client, we want to stop location update after setting location to client
