@@ -171,11 +171,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         markerOptions.position(latlng);
         markerOptions.title("Current Location");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-
         currentLocationMarker = mMap.addMarker(markerOptions);
 
         // move the camera to the location
-        float zoomLevel = 7.0f; //This goes up to 21
+        float zoomLevel = 7.5f; //This goes up to 21
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, zoomLevel));
         mMap.animateCamera(CameraUpdateFactory.zoomBy(10));
 
