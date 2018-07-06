@@ -83,10 +83,12 @@ public class MainActivity extends AppCompatActivity {
                 switch(menuId) {
                     case R.id.signout:
                         userSignout();
+                        item.setChecked(false);
                         break;
                     case R.id.filterDrawer:
                         Intent intent = new Intent(MainActivity.this, FilterPageActivity.class);
                         startActivity(intent);
+                        item.setChecked(false);
                         break;
                 }
                 return false;

@@ -11,6 +11,10 @@
             android:icon="@drawable/ic_filter_list_grey_24dp"
             android:title="@string/filter"/>
         <item
+            android:id="@+id/allTrails"
+            android:icon="@drawable/ic_view_all_black_24dp"
+            android:title="@string/allTrails"/>
+        <item
             android:id="@+id/signout"
             android:icon="@drawable/ic_logout_sleep_24dp"
             android:title="@string/signout"

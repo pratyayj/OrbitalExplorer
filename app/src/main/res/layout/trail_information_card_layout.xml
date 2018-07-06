@@ -3,13 +3,9 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardViewTI"
-    android:layout_width="354dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="16dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:layout_marginStart="16dp"
     card_view:cardElevation="8dp"
     card_view:layout_constraintEnd_toEndOf="parent"
     card_view:layout_constraintStart_toStartOf="parent"
@@ -93,6 +89,16 @@
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/ratingBar" />
+
+        <ImageView
+            android:id="@+id/dropDownArrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            card_view:srcCompat="@drawable/ic_arrow_drop_down_grey_24dp" />
 
     </android.support.constraint.ConstraintLayout>
 

@@ -38,5 +38,6 @@
     <string name="home">Home</string>
     <string name="signout">Sign Out</string>
     <string name="filter">Filter By Criteria</string>
+    <string name="allTrails">All Trails</string>
 
 </resources>

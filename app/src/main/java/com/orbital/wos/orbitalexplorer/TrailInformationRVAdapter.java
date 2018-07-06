@@ -6,6 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -52,10 +56,11 @@ public class TrailInformationRVAdapter extends RecyclerView.Adapter<TrailInforma
      * @param i Position i in the list of TrailGroup.
      */
     @Override
-    public void onBindViewHolder(TrailInformationHolder trailInformationHolder, int i) {
+    public void onBindViewHolder(final TrailInformationHolder trailInformationHolder, int i) {
         final TrailInformation trailInformation = trailInformationList.get(i);
         trailInformationHolder.informationTitle.setText(trailInformation.getTitle());
         trailInformationHolder.informationDescription.setText(trailInformation.getDescription());
+        trailInformationHolder.informationDescription.setVisibility(View.GONE);
         trailInformationHolder.informationRating.setRating(trailInformation.getRating());
         photoStorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(trailInformation.getPhotouri());
         Glide.with(mContext)
@@ -67,7 +72,19 @@ public class TrailInformationRVAdapter extends RecyclerView.Adapter<TrailInforma
             @Override
             public void onClick(View view, int position) {
                 // TO ADD ACTION TO BE TAKEN WHEN CARD IS CLICKED.
-                Toast.makeText(mContext, "CLICKED", Toast.LENGTH_SHORT).show();
+                if (trailInformationHolder.dropDownStatus == -1) {
+                    Toast.makeText(mContext, "CLICKED", Toast.LENGTH_SHORT).show();
+                    trailInformationHolder.informationDescription.setVisibility(View.VISIBLE);
+                    trailInformationHolder.informationDescription.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_in));
+                    trailInformationHolder.dropDownArrow.animate().rotationBy(180).setDuration(1).start();
+                    trailInformationHolder.dropDownStatus = 1;
+                } else {
+                    Toast.makeText(mContext, "CLICKED", Toast.LENGTH_SHORT).show();
+                    trailInformationHolder.informationDescription.setVisibility(View.GONE);
+                    trailInformationHolder.informationDescription.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_out));
+                    trailInformationHolder.dropDownArrow.animate().rotationBy(180).setDuration(1).start();
+                    trailInformationHolder.dropDownStatus = -1;
+                }
             }
         });
     }
@@ -92,6 +109,8 @@ public class TrailInformationRVAdapter extends RecyclerView.Adapter<TrailInforma
         TextView informationDescription;
         RatingBar informationRating;
         ImageView informationPhoto;
+        ImageView dropDownArrow;
+        int dropDownStatus = -1;
 
         RecyclerViewClickListener recyclerViewClickListener;
 
@@ -102,6 +121,7 @@ public class TrailInformationRVAdapter extends RecyclerView.Adapter<TrailInforma
             informationDescription = itemView.findViewById(R.id.trailInfoDescription);
             informationPhoto = itemView.findViewById(R.id.trailInfoPhoto);
             informationRating = itemView.findViewById(R.id.ratingBar);
+            dropDownArrow = itemView.findViewById(R.id.dropDownArrow);
             view.setOnClickListener(this);
         }
 
