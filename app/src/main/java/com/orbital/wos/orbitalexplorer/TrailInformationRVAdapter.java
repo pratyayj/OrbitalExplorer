@@ -10,6 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -67,19 +68,25 @@ public class TrailInformationRVAdapter extends RecyclerView.Adapter<TrailInforma
                 .load(photoStorageReference)
                 .into(trailInformationHolder.informationPhoto);
 
+        trailInformationHolder.goButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, "CLICKED", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         trailInformationHolder.setRecyclerViewClickListener(new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
                 // TO ADD ACTION TO BE TAKEN WHEN CARD IS CLICKED.
                 if (trailInformationHolder.dropDownStatus == -1) {
-                    Toast.makeText(mContext, "CLICKED", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(mContext, "CLICKED", Toast.LENGTH_SHORT).show();
                     trailInformationHolder.informationDescription.setVisibility(View.VISIBLE);
                     trailInformationHolder.informationDescription.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_in));
                     trailInformationHolder.dropDownArrow.animate().rotationBy(180).setDuration(1).start();
                     trailInformationHolder.dropDownStatus = 1;
                 } else {
-                    Toast.makeText(mContext, "CLICKED", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(mContext, "CLICKED", Toast.LENGTH_SHORT).show();
                     trailInformationHolder.informationDescription.setVisibility(View.GONE);
                     trailInformationHolder.informationDescription.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_out));
                     trailInformationHolder.dropDownArrow.animate().rotationBy(180).setDuration(1).start();
@@ -110,6 +117,7 @@ public class TrailInformationRVAdapter extends RecyclerView.Adapter<TrailInforma
         RatingBar informationRating;
         ImageView informationPhoto;
         ImageView dropDownArrow;
+        Button goButton;
         int dropDownStatus = -1;
 
         RecyclerViewClickListener recyclerViewClickListener;
@@ -122,6 +130,7 @@ public class TrailInformationRVAdapter extends RecyclerView.Adapter<TrailInforma
             informationPhoto = itemView.findViewById(R.id.trailInfoPhoto);
             informationRating = itemView.findViewById(R.id.ratingBar);
             dropDownArrow = itemView.findViewById(R.id.dropDownArrow);
+            goButton = itemView.findViewById(R.id.buttonGo);
             view.setOnClickListener(this);
         }
 

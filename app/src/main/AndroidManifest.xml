@@ -26,7 +26,8 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity android:name=".FilterPageActivity" />
-        <activity android:name=".FilterResultsActivity"></activity>
+        <activity android:name=".FilterResultsActivity" />
+        <activity android:name=".AllTrailsActivity"></activity>
     </application>
 
 </manifest>

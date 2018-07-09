@@ -81,6 +81,9 @@ public class MainActivity extends AppCompatActivity {
                 int menuId = item.getItemId();
 
                 switch(menuId) {
+                    case R.id.home:
+                        item.setChecked(false);
+                        break;
                     case R.id.signout:
                         userSignout();
                         item.setChecked(false);
@@ -88,6 +91,11 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.filterDrawer:
                         Intent intent = new Intent(MainActivity.this, FilterPageActivity.class);
                         startActivity(intent);
+                        item.setChecked(false);
+                        break;
+                    case R.id.allTrails:
+                        Intent intent1 = new Intent(MainActivity.this, AllTrailsActivity.class);
+                        startActivity(intent1);
                         item.setChecked(false);
                         break;
                 }

@@ -100,6 +100,19 @@
             app:layout_constraintStart_toStartOf="parent"
             card_view:srcCompat="@drawable/ic_arrow_drop_down_grey_24dp" />
 
+        <Button
+            android:id="@+id/buttonGo"
+            style="@style/AppTheme.ButtonFilter"
+            android:layout_width="46dp"
+            android:layout_height="38dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:drawableLeft="@drawable/ic_directions_run_white_24dp"
+            android:theme="@style/AppTheme.ButtonFilter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>
