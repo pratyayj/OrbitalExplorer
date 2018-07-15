@@ -107,7 +107,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             uiSettings.setZoomControlsEnabled(true);
         }
 
-        // to change map type
+        // To change map type
         // mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
 
         // Add a marker in Sydney and move the camera
