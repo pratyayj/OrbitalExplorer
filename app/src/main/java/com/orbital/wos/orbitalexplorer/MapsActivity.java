@@ -1,4 +1,4 @@
-package com.example.map;
+package com.orbital.wos.orbitalexplorer;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
