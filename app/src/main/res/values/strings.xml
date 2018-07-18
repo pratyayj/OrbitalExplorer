@@ -39,6 +39,7 @@
     <string name="signout">Sign Out</string>
     <string name="filter">Filter By Criteria</string>
     <string name="allTrails">All Trails</string>
+    <string name="history">History</string>
     <string name="all_trails_title">All trails</string>
     <string name="all_trails_description">Check out our entire collection!</string>
 

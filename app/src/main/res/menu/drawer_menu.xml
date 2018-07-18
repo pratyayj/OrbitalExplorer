@@ -15,6 +15,10 @@
             android:icon="@drawable/ic_view_all_black_24dp"
             android:title="@string/allTrails"/>
         <item
+            android:id="@+id/history"
+            android:icon="@drawable/ic_history_grey_24dp"
+            android:title="@string/history"/>
+        <item
             android:id="@+id/signout"
             android:icon="@drawable/ic_logout_sleep_24dp"
             android:title="@string/signout"

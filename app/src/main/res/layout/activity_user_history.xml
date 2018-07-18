@@ -12,7 +12,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".AllTrailsActivity">
+        tools:context=".UserHistoryActivity">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/AppBarLayout"
@@ -39,7 +39,7 @@
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerViewAllTrails"
+            android:id="@+id/recyclerViewTrailHistory"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginEnd="16dp"
@@ -55,14 +55,14 @@
             app:layout_constraintTop_toBottomOf="@+id/allTrailsActivityDescription" />
 
         <TextView
-            android:id="@+id/allTrailsActivityTitle"
+            android:id="@+id/trailHistoryActivityTitle"
             android:layout_width="223dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/roboto_thin"
-            android:text="@string/all_trails_title"
+            android:text="Here's your history."
             android:textColor="@android:color/black"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,10 +75,10 @@
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:fontFamily="@font/quicksand"
-            android:text="@string/all_trails_description"
+            android:text="Isn't this obvious?"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/allTrailsActivityTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/trailHistoryActivityTitle" />
     </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.NavigationView

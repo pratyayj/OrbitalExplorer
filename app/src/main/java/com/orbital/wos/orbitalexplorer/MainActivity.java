@@ -98,6 +98,11 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent1);
                         item.setChecked(false);
                         break;
+                    case R.id.history:
+                        Intent intent2 = new Intent(MainActivity.this, UserHistoryActivity.class);
+                        startActivity(intent2);
+                        item.setChecked(false);
+                        break;
                 }
                 return false;
             }

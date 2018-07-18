@@ -27,7 +27,8 @@
 
         <activity android:name=".FilterPageActivity" />
         <activity android:name=".FilterResultsActivity" />
-        <activity android:name=".AllTrailsActivity"></activity>
+        <activity android:name=".AllTrailsActivity" />
+        <activity android:name=".UserHistoryActivity"></activity>
     </application>
 
 </manifest>
