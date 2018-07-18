@@ -6,13 +6,19 @@ public class TrailInformation {
     private String photouri;
     private int index;
     private int rating;
+    private double latitude;
+    private double longitude;
 
-    public TrailInformation(String inputTitle, String inputDescription, String inputPhotouri, int inputIndex, int inputRating) {
+    public TrailInformation(String inputTitle, String inputDescription, String inputPhotouri,
+                            int inputIndex, int inputRating, double inputLatitude, double inputLongitude) {
         this.title = inputTitle;
         this.description = inputDescription;
         this.photouri = inputPhotouri;
         this.index = inputIndex;
         this.rating = inputRating;
+        this.latitude = inputLatitude;
+        this.longitude = inputLongitude;
+
     }
 
     public TrailInformation() {
@@ -39,6 +45,14 @@ public class TrailInformation {
         return rating;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
     public void setIndex(int index) {
         this.index = index;
     }
@@ -57,5 +71,13 @@ public class TrailInformation {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }

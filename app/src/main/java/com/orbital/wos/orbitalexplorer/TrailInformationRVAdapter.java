@@ -1,6 +1,7 @@
 package com.orbital.wos.orbitalexplorer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -81,7 +82,14 @@ public class TrailInformationRVAdapter extends RecyclerView.Adapter<TrailInforma
         trailInformationHolder.goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "CLICKED", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(mContext, MapsActivity.class);
+                double tempLat = trailInformation.getLatitude();
+                double tempLong = trailInformation.getLongitude();
+                intent.putExtra("latitude", tempLat);
+                intent.putExtra("longitude", tempLong);
+                mContext.startActivity(intent);
+
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 final String trailSelectedTitle = trailInformation.getTitle();
                 DatabaseReference userdataDBR = FirebaseDatabase.getInstance().getReference().child("userdata");

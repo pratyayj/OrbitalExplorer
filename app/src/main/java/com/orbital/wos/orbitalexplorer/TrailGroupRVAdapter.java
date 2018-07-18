@@ -1,6 +1,7 @@
 package com.orbital.wos.orbitalexplorer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -70,7 +71,6 @@ public class TrailGroupRVAdapter extends RecyclerView.Adapter<TrailGroupRVAdapte
         trailGrouperHolder.setRecyclerViewClickListener(new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
-                // TO DO SOMETHING WHEN CLICKED.
                 Toast.makeText(mContext, "CLICKED", Toast.LENGTH_SHORT).show();
             }
         });
