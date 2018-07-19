@@ -39,6 +39,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.List;
@@ -53,12 +58,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationRequest locationRequest;
     private Location lastLocation;
     private Marker currentLocationMarker;
-    private double latitude;
-    private double longitude;
-    public static final int REQUEST_LOCATION_CODE = 99;
+    private double latitudeStart;
+    private double longitudeStart;
 
-    // Holds the DrawerLayout (which contains the NavigationView.
-    private DrawerLayout mDrawerLayout;
+    private double latA;
+    private double longA;
+    private String temp;
+    private FirebaseDatabase firebaseDatabase;
+
+    PointOfInterest poi = new PointOfInterest();
+    public static final int REQUEST_LOCATION_CODE = 99;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,12 +83,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
          * the ActionBar and ToolBar.
          */
         toolbarAssignment(R.drawable.ic_arrow_back_grey_24dp);
+        firebaseDatabase = FirebaseDatabase.getInstance("https://orbitalexplorer-206609.firebaseio.com/");
 
         Intent intent = getIntent();
-        latitude = intent.getDoubleExtra("latitude", 0);
-        longitude = intent.getDoubleExtra("longitude", 0);
+        latitudeStart = intent.getDoubleExtra("latitude", 0);
+        longitudeStart = intent.getDoubleExtra("longitude", 0);
 
-        Toast.makeText(this, latitude + " " + longitude, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, latitudeStart + " " + longitudeStart, Toast.LENGTH_SHORT).show();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -87,23 +97,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
     }
 
-    // produces a dialogue box for permission but override if already given permission
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch(requestCode) {
-            case REQUEST_LOCATION_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) { // permission is granted
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        if (client == null) { // if no client we create a new client
-                            buildGoogleApiClient();
-                        }
-                        mMap.setMyLocationEnabled(true);
-                    }
-                } else { // permission is denied
-                    Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show();
-                } return;
-        }
-    }
+
 
     /**
      * Manipulates the map once available.
@@ -133,42 +127,41 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // To change map type
         // mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
 
-        // LatLng sydney = new LatLng(-34, 151);
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().child("points").child("Marina Bay Walk");
 
-        LatLng trail = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(trail).title("Marker in Trail"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(trail));
-    }
 
-    public void onClick(View v) {
-        if (v.getId() == R.id.B_search) {
-            EditText tf_location = (EditText) findViewById(R.id.TF_location);
-            String location = tf_location.getText().toString();
-            List<Address> addressList = null;
-            MarkerOptions mo = new MarkerOptions();
-
-            if (!location.equals("")) {
-                Geocoder geocoder = new Geocoder(this);
-                try {
-                    addressList = geocoder.getFromLocationName(location, 5);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                // put a marker on all the results
-                for (int i = 0; i < addressList.size(); i++) {
-                    Address myAddress = addressList.get(i);
-                    LatLng latlng = new LatLng(myAddress.getLatitude(), myAddress.getLongitude());
-                    mo.position(latlng);
-                    mo.title("Your search result");
-                    mMap.addMarker(mo);
-
-                    // if we want the camera to focus on the last result's marker
-                    mMap.animateCamera(CameraUpdateFactory.newLatLng(latlng));
+        dbr.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                    poi = ds.getValue(PointOfInterest.class);
                 }
             }
-        }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        LatLng trailStart = new LatLng(latitudeStart, longitudeStart);
+        mMap.addMarker(new MarkerOptions()
+                .position(trailStart)
+                .title("Marker in Trail")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(trailStart));
+
+        /* mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(latA, longA))
+                .title("Merlion")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+        */
+
+        Toast.makeText(this, poi.getTitle() + " YAY ", Toast.LENGTH_LONG).show();
     }
+
+
 
     protected synchronized void buildGoogleApiClient() {
         client = new GoogleApiClient.Builder(this)
@@ -221,6 +214,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    /**
+     * This method checks the location permissions for the application.
+     * @return false if permission not given, true if given already.
+     */
     public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) { // if app asked before and the user said no
@@ -244,6 +241,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    /**
+     * To set up the toolbar on the top of the Activity.
+     * @param drawable The drawable item that will be used for the top-right hand icon.
+     */
     protected void toolbarAssignment(int drawable) {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -265,5 +266,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * This method produces a dialogue box for permission but overrides it if already given permission
+     * before hand.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch(requestCode) {
+            case REQUEST_LOCATION_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) { // permission is granted
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        if (client == null) { // if no client we create a new client
+                            buildGoogleApiClient();
+                        }
+                        mMap.setMyLocationEnabled(true);
+                    }
+                } else { // permission is denied
+                    Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show();
+                } return;
+        }
+    }
+
 
 }
