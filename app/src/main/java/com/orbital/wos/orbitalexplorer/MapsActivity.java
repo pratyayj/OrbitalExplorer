@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Camera;
+import android.graphics.Point;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -39,6 +40,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PointOfInterest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,6 +48,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
@@ -60,13 +63,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Marker currentLocationMarker;
     private double latitudeStart;
     private double longitudeStart;
+    private String trailTitle;
 
     private double latA;
     private double longA;
     private String temp;
     private FirebaseDatabase firebaseDatabase;
+    private MapsPOICallback mapsPOICallback;
 
-    PointOfInterest poi = new PointOfInterest();
+    ArrayList<PointsOfInterest> poiArray;
     public static final int REQUEST_LOCATION_CODE = 99;
 
     @Override
@@ -78,6 +83,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             checkLocationPermission();
         }
 
+        mapsPOICallback = new MapsPOICallback() {
+            @Override
+            public void onCallBack(PointsOfInterest pointOfInterest) {
+                createPoints(pointOfInterest);
+            }
+        };
+
         /**
          * This group of method calls and assignments relate to
          * the ActionBar and ToolBar.
@@ -88,6 +100,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Intent intent = getIntent();
         latitudeStart = intent.getDoubleExtra("latitude", 0);
         longitudeStart = intent.getDoubleExtra("longitude", 0);
+        trailTitle = intent.getStringExtra("title");
 
         //Toast.makeText(this, latitudeStart + " " + longitudeStart, Toast.LENGTH_SHORT).show();
 
@@ -127,23 +140,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // To change map type
         // mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
 
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().child("points").child("Marina Bay Walk");
-
-
-        dbr.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds: dataSnapshot.getChildren()) {
-                    poi = ds.getValue(PointOfInterest.class);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
+        getPointsOfInterestFirebase(mapsPOICallback);
 
         LatLng trailStart = new LatLng(latitudeStart, longitudeStart);
         mMap.addMarker(new MarkerOptions()
@@ -152,16 +149,36 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(trailStart));
 
-        /* mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(latA, longA))
-                .title("Merlion")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-        */
 
-        Toast.makeText(this, poi.getTitle() + " YAY ", Toast.LENGTH_LONG).show();
     }
 
+    protected void getPointsOfInterestFirebase(final MapsPOICallback mapsPOICallback) {
+        DatabaseReference mainRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference innerRef = mainRef.child("poi").child(trailTitle);
 
+        innerRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                    PointsOfInterest poi = new PointsOfInterest();
+                    poi = ds.getValue(PointsOfInterest.class);
+                    mapsPOICallback.onCallBack(poi);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    protected void createPoints (PointsOfInterest poi) {
+        mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(poi.getLatitude(), poi.getLongitude()))
+                .title(poi.getTitle())
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+    }
 
     protected synchronized void buildGoogleApiClient() {
         client = new GoogleApiClient.Builder(this)

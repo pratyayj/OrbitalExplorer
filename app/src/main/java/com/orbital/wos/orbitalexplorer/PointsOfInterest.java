@@ -1,21 +1,19 @@
 package com.orbital.wos.orbitalexplorer;
 
-import android.graphics.Point;
+public class PointsOfInterest {
+    private String title;
+    private String description;
+    private double latitude;
+    private double longitude;
 
-public class PointOfInterest {
-    String title;
-    String description;
-    double latitude;
-    double longitude;
-
-    public PointOfInterest(String inputTitle, String inputDescription, double inputLatitude, double inputLongitude) {
+    public PointsOfInterest(String inputTitle, String inputDescription, double inputLatitude, double inputLongitude) {
         this.title = inputTitle;
         this.description = inputDescription;
         this.latitude = inputLatitude;
         this.longitude = inputLongitude;
     }
 
-    public PointOfInterest() {}
+    public PointsOfInterest() {}
 
     public String getTitle() {
         return title;
