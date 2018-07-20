@@ -72,7 +72,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private MapsPOICallback mapsPOICallback;
 
     ArrayList<PointsOfInterest> poiArray;
-    public static final int REQUEST_LOCATION_CODE = 99;
+    public static final int REQUEST_LOCATION_CODE = 98;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
