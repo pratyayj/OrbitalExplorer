@@ -7,10 +7,14 @@ package com.orbital.wos.orbitalexplorer;
 public class TrailHistory {
     private String title;
     private String photouri;
+    private double latitude;
+    private double longitude;
 
-    public TrailHistory(String inputTitle, String inputPhotouri) {
+    public TrailHistory(String inputTitle, String inputPhotouri, double inputLatitude, double inputLongitude) {
         this.title = inputTitle;
         this.photouri = inputPhotouri;
+        this.latitude = inputLatitude;
+        this.longitude = inputLongitude;
     }
 
     public TrailHistory() {}
@@ -21,6 +25,22 @@ public class TrailHistory {
 
     public String getTitle() {
         return title;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public void setPhotouri(String inputPhotouri) {

@@ -195,7 +195,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void createPoints (PointsOfInterest poi) {
         Marker mark = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(poi.getLatitude(), poi.getLongitude()))
-                .title(poi.getTitle())
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         mark.setTag(poi);
     }

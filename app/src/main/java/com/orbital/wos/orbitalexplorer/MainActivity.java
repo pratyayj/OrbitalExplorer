@@ -2,6 +2,7 @@ package com.orbital.wos.orbitalexplorer;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,9 +16,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -108,11 +111,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        // Setting user's name as header text in drawer.
-        View headerView = navigationView.getHeaderView(0);
-        TextView navHeaderName = headerView.findViewById(R.id.name);
-        navHeaderName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        setupDrawerHeader(navigationView);
 
         // Assigns the Firebase Database for app to the local variable firebaseDatabase.
         firebaseDatabase = FirebaseDatabase.getInstance().getReference();
@@ -223,6 +222,28 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setSubtitle("");
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(drawable);
+    }
+
+    /**
+     * Setting user's name as header text and user's profile picture in drawer.
+     * @param navigationView The navigation view whose header is to be set.
+     */
+    public void setupDrawerHeader(NavigationView navigationView) {
+        View headerView = navigationView.getHeaderView(0);
+        TextView navHeaderName = headerView.findViewById(R.id.headerName);
+        ImageView navHeaderPicture = headerView.findViewById(R.id.headerProfilePicture);
+        navHeaderName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+
+        Uri photoUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+        String originalPieceOfUrl = "s96-c/photo.jpg";
+        String newPieceOfUrlToAdd = "s400-c/photo.jpg";
+        String photoPath = photoUrl.toString();
+
+        String newResImage = photoPath.replace(originalPieceOfUrl, newPieceOfUrlToAdd);
+
+        Glide.with(this)
+                .load(newResImage)
+                .into(navHeaderPicture);
     }
 
 }

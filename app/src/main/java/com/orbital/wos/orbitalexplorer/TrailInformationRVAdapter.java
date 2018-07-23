@@ -122,6 +122,8 @@ public class TrailInformationRVAdapter extends RecyclerView.Adapter<TrailInforma
                 Map<String, Object> trial = new HashMap<>();
                 trial.put("title", trailSelectedTitle);
                 trial.put("photouri", trailInformation.getPhotouri());
+                trial.put("latitude", trailInformation.getLatitude());
+                trial.put("longitude", trailInformation.getLongitude());
 
                 userdataDBR.child(currentUser.getUid()).child(trailSelectedTitle).updateChildren(trial);
             }

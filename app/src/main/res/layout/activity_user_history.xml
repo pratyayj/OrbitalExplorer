@@ -62,7 +62,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/roboto_thin"
-            android:text="Here's your history."
+            android:text="@string/history_title"
             android:textColor="@android:color/black"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,7 +75,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:fontFamily="@font/quicksand"
-            android:text="Isn't this obvious?"
+            android:text="@string/history_description"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/trailHistoryActivityTitle" />

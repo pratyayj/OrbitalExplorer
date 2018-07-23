@@ -1,6 +1,7 @@
 package com.orbital.wos.orbitalexplorer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -75,8 +76,14 @@ public class TrailHistoryRVAdapter extends RecyclerView.Adapter<TrailHistoryRVAd
         trailHistoryHolder.setRecyclerViewClickListener(new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
-                // TO ADD ACTION TO BE TAKEN WHEN CARD IS CLICKED.
-                Toast.makeText(mContext, "CLICKED", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, MapsActivity.class);
+                double tempLat = trailHistory.getLatitude();
+                double tempLong = trailHistory.getLongitude();
+                String tempTitle = trailHistory.getTitle();
+                intent.putExtra("latitude", tempLat);
+                intent.putExtra("longitude", tempLong);
+                intent.putExtra("title", tempTitle);
+                mContext.startActivity(intent);
             }
         });
     }

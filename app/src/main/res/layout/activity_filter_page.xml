@@ -80,7 +80,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/quicksand"
-                android:text="@string/durationShort" />
+                android:text="@string/duration_short" />
 
             <RadioButton
                 android:id="@+id/durationB"
@@ -90,7 +90,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/quicksand"
-                android:text="@string/durationMedium" />
+                android:text="@string/duration_medium" />
 
             <RadioButton
                 android:id="@+id/durationC"
@@ -100,7 +100,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/quicksand"
-                android:text="@string/durationLong" />
+                android:text="@string/duration_long" />
         </RadioGroup>
 
         <TextView
@@ -129,7 +129,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/quicksand"
-                android:text="@string/typeNature" />
+                android:text="@string/type_nature" />
 
             <RadioButton
                 android:id="@+id/typeB"
@@ -139,7 +139,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/quicksand"
-                android:text="@string/typeUrban" />
+                android:text="@string/type_urban" />
 
             <RadioButton
                 android:id="@+id/typeC"
@@ -149,7 +149,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/quicksand"
-                android:text="@string/typeBoth" />
+                android:text="@string/type_both" />
         </RadioGroup>
 
         <Button
