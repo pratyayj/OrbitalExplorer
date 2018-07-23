@@ -15,6 +15,15 @@ public class PointsOfInterest {
         this.placeID = inputPlaceID;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof PointsOfInterest) {
+            PointsOfInterest p = (PointsOfInterest) obj;
+            return getLatitude() == p.getLatitude();
+        }
+        return false;
+    }
+
     public PointsOfInterest() {}
 
     public String getPlaceID() {

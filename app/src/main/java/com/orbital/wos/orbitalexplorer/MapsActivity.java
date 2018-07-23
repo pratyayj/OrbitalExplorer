@@ -37,6 +37,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -83,10 +84,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             checkLocationPermission();
         }
 
+        poiArray = new ArrayList<>();
+
+        // Callback object that is called whenever a point of interest is created.
         mapsPOICallback = new MapsPOICallback() {
             @Override
             public void onCallBack(PointsOfInterest pointOfInterest) {
                 createPoints(pointOfInterest);
+                poiArray.add(pointOfInterest);
             }
         };
 
@@ -102,7 +107,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         longitudeStart = intent.getDoubleExtra("longitude", 0);
         trailTitle = intent.getStringExtra("title");
 
-        //Toast.makeText(this, latitudeStart + " " + longitudeStart, Toast.LENGTH_SHORT).show();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -110,13 +114,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
     }
 
-
-
     /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
+     * Manipulates the map once available (is a callback that is  triggered
+     * when the map is ready to be used.)
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
@@ -131,21 +131,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             // allows for my location to be found
             mMap.setMyLocationEnabled(true);
 
-            // allows for some UI settings which are turned off by default
             UiSettings uiSettings = mMap.getUiSettings();
             uiSettings.setCompassEnabled(true);
             uiSettings.setZoomControlsEnabled(true);
         }
-
-        // To change map type
-        // mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
 
         getPointsOfInterestFirebase(mapsPOICallback);
 
         LatLng trailStart = new LatLng(latitudeStart, longitudeStart);
         Marker start = mMap.addMarker(new MarkerOptions()
                 .position(trailStart)
-                .title("Marker in Trail")
+                .title("Start here.")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
         start.setTag("start");
         mMap.moveCamera(CameraUpdateFactory.newLatLng(trailStart));
@@ -153,17 +149,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                // TO PASS AS AN OBJECT
-                PointsOfInterest temp = (PointsOfInterest) marker.getTag();
-                String tempTitle = temp.getTitle();
-                String tempDescription = temp.getDescription();
-                String tempPlaceID = temp.getPlaceID();
-                Toast.makeText(MapsActivity.this, "Clicked" + temp.getTitle(), Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(MapsActivity.this, POIDisplayPopup.class);
-                i.putExtra("poiTitle", tempTitle);
-                i.putExtra("poiDescription", tempDescription);
-                i.putExtra("poiPlaceID", tempPlaceID);
-                startActivity(i);
+
+                for (int i = 0; i < poiArray.size(); i++) {
+                    if (marker.getTag().equals(poiArray.get(i))) {
+                        // TO PASS AS AN OBJECT
+                        PointsOfInterest tempPOI = (PointsOfInterest) marker.getTag();
+                        String tempTitle = tempPOI.getTitle();
+                        String tempDescription = tempPOI.getDescription();
+                        String tempPlaceID = tempPOI.getPlaceID();
+                        Intent intent = new Intent(MapsActivity.this, POIDisplayPopup.class);
+                        intent.putExtra("poiTitle", tempTitle);
+                        intent.putExtra("poiDescription", tempDescription);
+                        intent.putExtra("poiPlaceID", tempPlaceID);
+                        startActivity(intent);
+                    } else {
+
+                    }
+                }
                 return false;
             }
         });
@@ -218,15 +220,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
 
-        // defines the properties to that marker
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latlng);
-        markerOptions.title("Current Location");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-        currentLocationMarker = mMap.addMarker(markerOptions);
-
         // move the camera to the location
         float zoomLevel = 7.5f; //This goes up to 21
+
+        /*
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(latlng)
+                    .zoom(15)
+                    .bearing(lastLocation.getBearing())
+                    .tilt(0)
+                    .build();
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        */
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, zoomLevel));
         mMap.animateCamera(CameraUpdateFactory.zoomBy(10));
 
@@ -236,7 +242,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    // method for GoogleApiClient.ConnectionCallbacks,
+    // method for GoogleApiClient.ConnectionCallbacks
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         locationRequest = new LocationRequest();
@@ -291,6 +297,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         actionbar.setHomeAsUpIndicator(drawable);
     }
 
+    // To return to the previous activity when the back arrow is pressed.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
