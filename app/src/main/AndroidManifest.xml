@@ -28,9 +28,7 @@
 
         <meta-data
             android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts"
-            />
-
+            android:resource="@array/preloaded_fonts" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -38,8 +36,11 @@
         <activity android:name=".FilterPageActivity" />
         <activity android:name=".FilterResultsActivity" />
         <activity android:name=".AllTrailsActivity" />
-        <activity android:name=".UserHistoryActivity"></activity>
-        <activity android:name=".MapsActivity"/>
+        <activity android:name=".UserHistoryActivity" />
+        <activity android:name=".MapsActivity" />
+        <activity android:name=".POIDisplayPopup"
+            android:theme="@style/PopUpTheme"
+        ></activity>
     </application>
 
 </manifest>

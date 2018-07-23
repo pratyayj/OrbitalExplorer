@@ -5,15 +5,21 @@ public class PointsOfInterest {
     private String description;
     private double latitude;
     private double longitude;
+    private String placeID;
 
-    public PointsOfInterest(String inputTitle, String inputDescription, double inputLatitude, double inputLongitude) {
+    public PointsOfInterest(String inputTitle, String inputDescription, double inputLatitude, double inputLongitude, String inputPlaceID) {
         this.title = inputTitle;
         this.description = inputDescription;
         this.latitude = inputLatitude;
         this.longitude = inputLongitude;
+        this.placeID = inputPlaceID;
     }
 
     public PointsOfInterest() {}
+
+    public String getPlaceID() {
+        return placeID;
+    }
 
     public String getTitle() {
         return title;
@@ -29,6 +35,10 @@ public class PointsOfInterest {
 
     public double getLongitude() {
         return longitude;
+    }
+
+    public void setPlaceID(String placeID) {
+        this.placeID = placeID;
     }
 
     public void setLongitude(double longitude) {

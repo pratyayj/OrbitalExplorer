@@ -72,7 +72,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private MapsPOICallback mapsPOICallback;
 
     ArrayList<PointsOfInterest> poiArray;
-    public static final int REQUEST_LOCATION_CODE = 98;
+    public static final int REQUEST_LOCATION_CODE = 99;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,13 +143,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         getPointsOfInterestFirebase(mapsPOICallback);
 
         LatLng trailStart = new LatLng(latitudeStart, longitudeStart);
-        mMap.addMarker(new MarkerOptions()
+        Marker start = mMap.addMarker(new MarkerOptions()
                 .position(trailStart)
                 .title("Marker in Trail")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+        start.setTag("start");
         mMap.moveCamera(CameraUpdateFactory.newLatLng(trailStart));
 
-
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                // TO PASS AS AN OBJECT
+                PointsOfInterest temp = (PointsOfInterest) marker.getTag();
+                String tempTitle = temp.getTitle();
+                String tempDescription = temp.getDescription();
+                String tempPlaceID = temp.getPlaceID();
+                Toast.makeText(MapsActivity.this, "Clicked" + temp.getTitle(), Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(MapsActivity.this, POIDisplayPopup.class);
+                i.putExtra("poiTitle", tempTitle);
+                i.putExtra("poiDescription", tempDescription);
+                i.putExtra("poiPlaceID", tempPlaceID);
+                startActivity(i);
+                return false;
+            }
+        });
     }
 
     protected void getPointsOfInterestFirebase(final MapsPOICallback mapsPOICallback) {
@@ -174,10 +191,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     protected void createPoints (PointsOfInterest poi) {
-        mMap.addMarker(new MarkerOptions()
+        Marker mark = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(poi.getLatitude(), poi.getLongitude()))
                 .title(poi.getTitle())
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        mark.setTag(poi);
     }
 
     protected synchronized void buildGoogleApiClient() {
