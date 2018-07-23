@@ -15,9 +15,10 @@
 
     <string name="signout_button">Sign out</string>
 
-    <!-- Home activity related. -->
+    <!-- Home and Group activity related. -->
     <string name="lets_explore">Ready to explore?</string>
     <string name="about_groups">To get you started quickly, here\'s some trail groups!</string>
+    <string name="why_not">Why not give this a shot?</string>
 
     <!-- Filter activity and results related. -->
     <string name="choose_filters">Select your filters.</string>
@@ -47,5 +48,8 @@
     <!-- History activity related. -->
     <string name="history_title">Here\'s your history.</string>
     <string name="history_description">Your past, for your convenience.</string>
+
+    <!-- Maps Activity and POI Display related. -->
+    <string name="checking_opening">Checking opening hours...</string>
 
 </resources>

@@ -112,7 +112,6 @@ public class UserHistoryActivity extends AppCompatActivity {
                         break;
                     case R.id.home:
                         Intent intent1 = new Intent(UserHistoryActivity.this, MainActivity.class);
-                        finishAffinity();
                         startActivity(intent1);
                         item.setChecked(false);
                         break;

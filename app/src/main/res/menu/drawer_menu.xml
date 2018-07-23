@@ -13,7 +13,7 @@
         <item
             android:id="@+id/allTrails"
             android:icon="@drawable/ic_view_all_black_24dp"
-            android:title="@string/allTrails"/>
+            android:title="@string/all_trails"/>
         <item
             android:id="@+id/history"
             android:icon="@drawable/ic_history_grey_24dp"

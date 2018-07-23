@@ -73,7 +73,12 @@ public class TrailInformationRVAdapter extends RecyclerView.Adapter<TrailInforma
         trailInformationHolder.informationTitle.setText(trailInformation.getTitle());
         trailInformationHolder.informationDescription.setText(trailInformation.getDescription());
         trailInformationHolder.informationDescription.setVisibility(View.GONE);
-        trailInformationHolder.informationRating.setRating(trailInformation.getRating());
+        if (trailInformation.getRating() != 0) {
+            trailInformationHolder.informationRating.setRating(trailInformation.getRating());
+        } else {
+            trailInformationHolder.informationRating.setVisibility(View.GONE);
+            trailInformationHolder.ratingTextView.setVisibility(View.GONE);
+        }
         photoStorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(trailInformation.getPhotouri());
         Glide.with(mContext)
                 .load(photoStorageReference)
@@ -168,6 +173,7 @@ public class TrailInformationRVAdapter extends RecyclerView.Adapter<TrailInforma
         CardView informationCardView;
         TextView informationTitle;
         TextView informationDescription;
+        TextView ratingTextView;
         RatingBar informationRating;
         ImageView informationPhoto;
         ImageView dropDownArrow;
@@ -183,6 +189,7 @@ public class TrailInformationRVAdapter extends RecyclerView.Adapter<TrailInforma
             informationDescription = itemView.findViewById(R.id.trailInfoDescription);
             informationPhoto = itemView.findViewById(R.id.trailInfoPhoto);
             informationRating = itemView.findViewById(R.id.ratingBar);
+            ratingTextView = itemView.findViewById(R.id.ratingTextView);
             dropDownArrow = itemView.findViewById(R.id.dropDownArrow);
             goButton = itemView.findViewById(R.id.buttonGo);
             view.setOnClickListener(this);

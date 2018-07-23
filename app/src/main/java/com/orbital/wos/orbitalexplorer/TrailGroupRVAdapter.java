@@ -59,7 +59,7 @@ public class TrailGroupRVAdapter extends RecyclerView.Adapter<TrailGroupRVAdapte
      * @param i Position i in the list of TrailGroup.
      */
     @Override
-    public void onBindViewHolder(@NonNull TrailGroupHolder trailGrouperHolder, int i) {
+    public void onBindViewHolder(@NonNull final TrailGroupHolder trailGrouperHolder, int i) {
         final TrailGroup trailGroup = trailGroups.get(i);
         trailGrouperHolder.groupHeader.setText(trailGroup.getHeader());
         trailGrouperHolder.groupDescription.setText(trailGroup.getDescription());
@@ -71,7 +71,10 @@ public class TrailGroupRVAdapter extends RecyclerView.Adapter<TrailGroupRVAdapte
         trailGrouperHolder.setRecyclerViewClickListener(new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Toast.makeText(mContext, "CLICKED", Toast.LENGTH_SHORT).show();
+                String trailGroupHeader = trailGroup.getHeader();
+                Intent intent = new Intent(mContext, GroupDisplayActivity.class);
+                intent.putExtra("header", trailGroupHeader);
+                mContext.startActivity(intent);
             }
         });
     }

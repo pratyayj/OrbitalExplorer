@@ -38,9 +38,10 @@
         <activity android:name=".AllTrailsActivity" />
         <activity android:name=".UserHistoryActivity" />
         <activity android:name=".MapsActivity" />
-        <activity android:name=".POIDisplayPopup"
-            android:theme="@style/PopUpTheme"
-        ></activity>
+        <activity
+            android:name=".POIDisplayPopup"
+            android:theme="@style/PopUpTheme" />
+        <activity android:name=".GroupDisplayActivity"></activity>
     </application>
 
 </manifest>

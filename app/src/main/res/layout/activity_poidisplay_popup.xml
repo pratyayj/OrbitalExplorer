@@ -24,7 +24,7 @@
         android:gravity="center"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:text="TempTitle"
+        android:text=""
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +43,7 @@
         android:gravity="center"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:text="TempDesc"
+        android:text=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/poi_title" />
@@ -58,7 +58,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/roboto_condensed_light"
-        android:text="TempVicinity"
+        android:text="@string/checking_opening"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/poi_description" />

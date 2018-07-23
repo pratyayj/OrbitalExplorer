@@ -107,7 +107,6 @@ public class AllTrailsActivity extends AppCompatActivity {
                         break;
                     case R.id.home:
                         Intent intent1 = new Intent(AllTrailsActivity.this, MainActivity.class);
-                        finishAffinity();
                         startActivity(intent1);
                         item.setChecked(false);
                         break;
