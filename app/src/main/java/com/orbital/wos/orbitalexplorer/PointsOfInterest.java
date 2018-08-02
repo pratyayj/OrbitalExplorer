@@ -6,13 +6,15 @@ public class PointsOfInterest {
     private double latitude;
     private double longitude;
     private String placeID;
+    private int index;
 
-    public PointsOfInterest(String inputTitle, String inputDescription, double inputLatitude, double inputLongitude, String inputPlaceID) {
+    public PointsOfInterest(String inputTitle, String inputDescription, double inputLatitude, double inputLongitude, String inputPlaceID, int inputIndex) {
         this.title = inputTitle;
         this.description = inputDescription;
         this.latitude = inputLatitude;
         this.longitude = inputLongitude;
         this.placeID = inputPlaceID;
+        this.index = inputIndex;
     }
 
     @Override
@@ -28,6 +30,10 @@ public class PointsOfInterest {
 
     public String getPlaceID() {
         return placeID;
+    }
+
+    public int getIndex() {
+        return index;
     }
 
     public String getTitle() {
@@ -66,5 +72,7 @@ public class PointsOfInterest {
         this.description = description;
     }
 
-
+    public void setIndex(int index) {
+        this.index = index;
+    }
 }

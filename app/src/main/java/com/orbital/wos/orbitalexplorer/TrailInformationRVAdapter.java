@@ -92,9 +92,11 @@ public class TrailInformationRVAdapter extends RecyclerView.Adapter<TrailInforma
                 double tempLat = trailInformation.getLatitude();
                 double tempLong = trailInformation.getLongitude();
                 String tempTitle = trailInformation.getTitle();
+                int tempNumberpoi = trailInformation.getNumberpoi();
                 intent.putExtra("latitude", tempLat);
                 intent.putExtra("longitude", tempLong);
                 intent.putExtra("title", tempTitle);
+                intent.putExtra("numberpoi", tempNumberpoi);
                 mContext.startActivity(intent);
 
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();

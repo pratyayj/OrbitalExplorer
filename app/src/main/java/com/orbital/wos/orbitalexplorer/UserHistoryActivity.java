@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -124,6 +125,14 @@ public class UserHistoryActivity extends AppCompatActivity {
         });
 
         setupDrawerHeader(navigationView);
+
+        final Button clearHistory = findViewById(R.id.buttonClearHistory);
+        clearHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearHistory();
+            }
+        });
     }
 
     /**
@@ -228,4 +237,11 @@ public class UserHistoryActivity extends AppCompatActivity {
                 .load(newResImage)
                 .into(navHeaderPicture);
     }
+
+    private void clearHistory() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        final String currentUserUid = currentUser.getUid();
+        firebaseDatabase.child("userdata").child(currentUserUid).removeValue();
+    }
+
 }

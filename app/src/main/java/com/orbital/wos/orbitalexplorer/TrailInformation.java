@@ -8,9 +8,11 @@ public class TrailInformation {
     private int rating;
     private double latitude;
     private double longitude;
+    private int numberpoi;
 
     public TrailInformation(String inputTitle, String inputDescription, String inputPhotouri,
-                            int inputIndex, int inputRating, double inputLatitude, double inputLongitude) {
+                            int inputIndex, int inputRating, double inputLatitude, double inputLongitude,
+                            int inputNumberpoi) {
         this.title = inputTitle;
         this.description = inputDescription;
         this.photouri = inputPhotouri;
@@ -18,11 +20,16 @@ public class TrailInformation {
         this.rating = inputRating;
         this.latitude = inputLatitude;
         this.longitude = inputLongitude;
+        this.numberpoi = inputNumberpoi;
 
     }
 
     public TrailInformation() {
 
+    }
+
+    public int getNumberpoi() {
+        return numberpoi;
     }
 
     public int getIndex() {
@@ -79,5 +86,9 @@ public class TrailInformation {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public void setNumberpoi(int numberpoi) {
+        this.numberpoi = numberpoi;
     }
 }

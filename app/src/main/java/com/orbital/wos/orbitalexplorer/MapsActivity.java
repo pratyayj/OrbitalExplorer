@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Camera;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +22,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -42,14 +45,32 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PointOfInterest;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.DirectionsApi;
+import com.google.maps.DirectionsApiRequest;
+import com.google.maps.GeoApiContext;
+import com.google.maps.model.DirectionsLeg;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.DirectionsRoute;
+import com.google.maps.model.DirectionsStep;
+import com.google.maps.model.EncodedPolyline;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
@@ -65,10 +86,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private double latitudeStart;
     private double longitudeStart;
     private String trailTitle;
+    private int numberpoi;
 
-    private double latA;
-    private double longA;
-    private String temp;
     private FirebaseDatabase firebaseDatabase;
     private MapsPOICallback mapsPOICallback;
 
@@ -84,6 +103,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             checkLocationPermission();
         }
 
+        final String apiKey = getString(R.string.google_api_key);
+
         poiArray = new ArrayList<>();
 
         // Callback object that is called whenever a point of interest is created.
@@ -92,6 +113,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onCallBack(PointsOfInterest pointOfInterest) {
                 createPoints(pointOfInterest);
                 poiArray.add(pointOfInterest);
+                Collections.sort(poiArray, new POIComparator());
+
+                // Once all the points have been added, this section of the code - i.e. the creation
+                // of the actual trail path - will be executed.
+                if (poiArray.size() > numberpoi) {
+
+                    ArrayList<LatLng> latLngArrayList = new ArrayList<>();
+                    for (PointsOfInterest x : poiArray) {
+                        LatLng temp = new LatLng(x.getLatitude(), x.getLongitude());
+                        latLngArrayList.add(temp);
+                    }
+
+                    for (int i = 0; i < numberpoi; i++) {
+                        String url = getUrl(latLngArrayList.get(i), latLngArrayList.get(i+1), apiKey);
+                        FetchUrl fetchUrl = new FetchUrl();
+                        fetchUrl.execute(url);
+                    }
+
+                } else {
+
+                }
             }
         };
 
@@ -106,6 +148,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         latitudeStart = intent.getDoubleExtra("latitude", 0);
         longitudeStart = intent.getDoubleExtra("longitude", 0);
         trailTitle = intent.getStringExtra("title");
+        numberpoi = intent.getIntExtra("numberpoi", 0);
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -136,20 +179,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             uiSettings.setZoomControlsEnabled(true);
         }
 
-        getPointsOfInterestFirebase(mapsPOICallback);
-
         LatLng trailStart = new LatLng(latitudeStart, longitudeStart);
-        Marker start = mMap.addMarker(new MarkerOptions()
+
+        // Creation of a generic point of interest for the start point of any trail.
+        PointsOfInterest start = new PointsOfInterest("Start", "Starting point.",
+                latitudeStart, longitudeStart, "-", 1);
+        poiArray.add(start);
+
+        // Adds the start point as a marker on the map.
+        Marker startMarker = mMap.addMarker(new MarkerOptions()
                 .position(trailStart)
                 .title("Start here.")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-        start.setTag("start");
+        startMarker.setTag("start");
         mMap.moveCamera(CameraUpdateFactory.newLatLng(trailStart));
+
+        getPointsOfInterestFirebase(mapsPOICallback);
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-
                 for (int i = 0; i < poiArray.size(); i++) {
                     if (marker.getTag().equals(poiArray.get(i))) {
                         // TO PASS AS AN OBJECT
@@ -171,6 +220,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    /**
+     * This method retrieves/gets the points of interests from the Firebase database.
+     * @param mapsPOICallback The callback that will be performed when this method is called.
+     */
     protected void getPointsOfInterestFirebase(final MapsPOICallback mapsPOICallback) {
         DatabaseReference mainRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference innerRef = mainRef.child("poi").child(trailTitle);
@@ -192,6 +245,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    /**
+     * This method creates a marker for the point of interest on the map.
+     * @param poi The point of interest to be marked on to the map.
+     */
     protected void createPoints (PointsOfInterest poi) {
         Marker mark = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(poi.getLatitude(), poi.getLongitude()))
@@ -328,6 +385,194 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 } return;
         }
     }
+
+
+    /**
+     * This method creates the URL that is to be used to retrieve the JSON data regarding directions.
+     * @param origin Origin LatLng (i.e. start)
+     * @param dest Destination LatLng (i.e. end)
+     * @param key ApiKey
+     * @return URL string
+     */
+    private String getUrl(LatLng origin, LatLng dest, String key) {
+
+        // Origin of route
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+
+        // Destination of route
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+
+        // Sensor enabled
+        String sensor = "sensor=false";
+        // Mode of navigation is walking
+        String mode = "mode=walking";
+
+        String apiKey = key;
+
+        // Building the parameters to the web service
+        String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + mode;
+
+        // Output format
+        String output = "json";
+
+        // Building the url to the web service
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&" + apiKey;
+
+        return url;
+    }
+
+    /**
+     * A method to download JSON direction data from the URL generated earlier.
+     * @param strUrl The URL generated to request for directions between two points
+     * @return The string data generated.
+     * @throws IOException Input-Output exception
+     */
+    private String downloadUrl(String strUrl) throws IOException {
+        String data = "";
+        InputStream iStream = null;
+        HttpURLConnection urlConnection = null;
+        try {
+            URL url = new URL(strUrl);
+
+            // Creating an http connection to communicate with url
+            urlConnection = (HttpURLConnection) url.openConnection();
+
+            // Connecting to url
+            urlConnection.connect();
+
+            // Reading data from url
+            iStream = urlConnection.getInputStream();
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
+
+            StringBuffer sb = new StringBuffer();
+
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+            data = sb.toString();
+            Log.d("downloadUrl", data.toString());
+            br.close();
+
+        } catch (Exception e) {
+            Log.d("Exception", e.toString());
+        } finally {
+            iStream.close();
+            urlConnection.disconnect();
+        }
+        return data;
+    }
+
+    /**
+     * Fetches the data from the download URL link and then executes the parsing once all is retrieved.
+     */
+    private class FetchUrl extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... url) {
+
+            // For storing data from web service
+            String data = "";
+
+            try {
+                // Fetching the data from web service
+                data = downloadUrl(url[0]);
+                Log.d("Background Task data", data.toString());
+            } catch (Exception e) {
+                Log.d("Background Task", e.toString());
+            }
+            return data;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            ParserTask parserTask = new ParserTask();
+
+            // Invokes the thread for parsing the JSON data
+            parserTask.execute(result);
+
+        }
+    }
+
+    /**
+     * A class to parse the Google Places in JSON format using the DirectionsParser class.
+     * Following this, the trail line is drawn out in the map.
+     */
+    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
+
+        // Parsing the data in non-ui thread
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
+
+            JSONObject jObject;
+            List<List<HashMap<String, String>>> routes = null;
+
+            try {
+                jObject = new JSONObject(jsonData[0]);
+                Log.d("ParserTask",jsonData[0].toString());
+                DirectionsParser parser = new DirectionsParser();
+                Log.d("ParserTask", parser.toString());
+
+                // Starts parsing data
+                routes = parser.parse(jObject);
+                Log.d("ParserTask","Executing routes");
+                Log.d("ParserTask",routes.toString());
+
+            } catch (Exception e) {
+                Log.d("ParserTask",e.toString());
+                e.printStackTrace();
+            }
+            return routes;
+        }
+
+        // Executes in UI thread, after the parsing process
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
+            ArrayList<LatLng> points;
+            PolylineOptions lineOptions = null;
+
+            // Traversing through all the routes
+            for (int i = 0; i < result.size(); i++) {
+                points = new ArrayList<>();
+                lineOptions = new PolylineOptions();
+
+                // Fetching i-th route
+                List<HashMap<String, String>> path = result.get(i);
+
+                // Fetching all the points in i-th route
+                for (int j = 0; j < path.size(); j++) {
+                    HashMap<String, String> point = path.get(j);
+
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lng = Double.parseDouble(point.get("lng"));
+                    LatLng position = new LatLng(lat, lng);
+
+                    points.add(position);
+                }
+
+                // Adding all the points in the route to LineOptions
+                lineOptions.addAll(points);
+                lineOptions.width(10);
+                lineOptions.color(R.color.purpleHM);
+
+                Log.d("onPostExecute","onPostExecute lineoptions decoded");
+
+            }
+
+            // Drawing polyline in the Google Map for the i-th route
+            if(lineOptions != null) {
+                mMap.addPolyline(lineOptions);
+            }
+            else {
+                Log.d("onPostExecute","without Polylines drawn");
+            }
+        }
+    }
+
 
 
 }
