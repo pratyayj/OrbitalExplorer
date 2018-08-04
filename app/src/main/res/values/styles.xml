@@ -5,6 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowTheme</item>
     </style>
 
     <style name="AppTheme.ButtonSignUp" parent="AppTheme">
@@ -37,6 +38,15 @@
         <item name="android:windowCloseOnTouchOutside">true</item>
         <item name="android:windowBackground">@drawable/poi_bg</item>
         <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="OverflowTheme" parent="@style/Widget.AppCompat.ActionButton.Overflow" >
+        <item name="android:tint">@color/overflow</item>
+    </style>
+
+    <style name="UserToRateBar" parent="AppTheme">
+        <item name="colorControlNormal">@color/beigeHM</item>
+        <item name="colorControlActivated">@color/pastelOrange</item>
     </style>
 
 </resources>

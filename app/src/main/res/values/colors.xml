@@ -17,4 +17,6 @@
     <color name="greenFade">#8FC194</color>
     <color name="purpleHM">#2F3269</color>
     <color name="sheerBlackHM">#051316</color>
+
+    <color name="overflow">#CDCDCD</color>
 </resources>

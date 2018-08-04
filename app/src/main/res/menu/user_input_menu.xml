@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/rate"
+        android:title="Rate trail"
+        android:icon="@drawable/ic_stars_rating_24dp"
+        app:showAsAction="never"/>
+    <item android:id="@+id/review"
+        android:title="Share tips"
+        android:icon="@drawable/ic_tips_review_24dp"
+        app:showAsAction="never"/>
+    <item android:id="@+id/read_tips"
+        android:title="Read tips"
+        android:icon="@drawable/ic_view_headline_24dp"
+        app:showAsAction="never"/>
+</menu>

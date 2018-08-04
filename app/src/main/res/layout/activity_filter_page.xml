@@ -80,7 +80,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/quicksand"
-                android:text="@string/duration_short" />
+                android:text="@string/duration_short"
+                android:buttonTint="@color/pastelOrange"/>
 
             <RadioButton
                 android:id="@+id/durationB"
@@ -90,7 +91,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/quicksand"
-                android:text="@string/duration_medium" />
+                android:text="@string/duration_medium"
+                android:buttonTint="@color/pastelOrange"/>
 
             <RadioButton
                 android:id="@+id/durationC"
@@ -100,7 +102,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/quicksand"
-                android:text="@string/duration_long" />
+                android:text="@string/duration_long"
+                android:buttonTint="@color/pastelOrange" />
         </RadioGroup>
 
         <TextView
@@ -129,7 +132,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/quicksand"
-                android:text="@string/type_nature" />
+                android:text="@string/type_nature"
+                android:buttonTint="@color/pastelOrange" />
 
             <RadioButton
                 android:id="@+id/typeB"
@@ -139,7 +143,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/quicksand"
-                android:text="@string/type_urban" />
+                android:text="@string/type_urban"
+                android:buttonTint="@color/pastelOrange" />
 
             <RadioButton
                 android:id="@+id/typeC"
@@ -149,7 +154,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/quicksand"
-                android:text="@string/type_both" />
+                android:text="@string/type_both"
+                android:buttonTint="@color/pastelOrange" />
         </RadioGroup>
 
         <Button

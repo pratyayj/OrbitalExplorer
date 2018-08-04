@@ -1,31 +1,29 @@
 package com.orbital.wos.orbitalexplorer;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Camera;
-import android.graphics.Color;
-import android.graphics.Point;
-import android.location.Address;
-import android.location.Geocoder;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -35,30 +33,20 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PointOfInterest;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.maps.DirectionsApi;
-import com.google.maps.DirectionsApiRequest;
-import com.google.maps.GeoApiContext;
-import com.google.maps.model.DirectionsLeg;
-import com.google.maps.model.DirectionsResult;
-import com.google.maps.model.DirectionsRoute;
-import com.google.maps.model.DirectionsStep;
-import com.google.maps.model.EncodedPolyline;
 
 import org.json.JSONObject;
 
@@ -183,7 +171,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Creation of a generic point of interest for the start point of any trail.
         PointsOfInterest start = new PointsOfInterest("Start", "Starting point.",
-                latitudeStart, longitudeStart, "-", 1);
+                latitudeStart, longitudeStart, "-", 1, "start");
         poiArray.add(start);
 
         // Adds the start point as a marker on the map.
@@ -250,9 +238,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * @param poi The point of interest to be marked on to the map.
      */
     protected void createPoints (PointsOfInterest poi) {
+        String type = poi.getType();
+        Drawable icon = null;
+
+        if (type.equals("culture")) {
+            icon = getResources().getDrawable(R.drawable.ic_culture_24dp);
+        } else if (type.equals("park")) {
+            icon = getResources().getDrawable(R.drawable.ic_park_24dp);
+        } else if (type.equals("attraction")) {
+            icon = getResources().getDrawable(R.drawable.ic_attraction_24dp);
+        } else if (type.equals("photography")) {
+            icon = getResources().getDrawable(R.drawable.ic_photography_24dp);
+        }
+
+        BitmapDescriptor markerIcon = getMarkerIconFromDrawable(icon);
+
         Marker mark = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(poi.getLatitude(), poi.getLongitude()))
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                .icon(markerIcon));
+                //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         mark.setTag(poi);
     }
 
@@ -361,6 +365,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 this.finish();
                 //overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
                 return true;
+            case R.id.rate:
+                DialogFragment newFragment = RatingFragment.newInstance();
+                newFragment.show(getFragmentManager(), "dialog");
         }
         return super.onOptionsItemSelected(item);
     }
@@ -573,6 +580,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
+        Canvas canvas = new Canvas();
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(bitmap);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    @SuppressLint("RestrictedApi")
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        if (menu instanceof MenuBuilder) {
+            ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        }
+        inflater.inflate(R.menu.user_input_menu, menu);
+        return true;
+    }
 
 
 }
