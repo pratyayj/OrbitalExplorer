@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,9 +20,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -229,21 +233,32 @@ public class MainActivity extends AppCompatActivity {
      * @param navigationView The navigation view whose header is to be set.
      */
     public void setupDrawerHeader(NavigationView navigationView) {
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        String currentProvider = user.getProviders().get(0);
+
         View headerView = navigationView.getHeaderView(0);
         TextView navHeaderName = headerView.findViewById(R.id.headerName);
         ImageView navHeaderPicture = headerView.findViewById(R.id.headerProfilePicture);
-        navHeaderName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
 
-        Uri photoUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
-        String originalPieceOfUrl = "s96-c/photo.jpg";
-        String newPieceOfUrlToAdd = "s400-c/photo.jpg";
-        String photoPath = photoUrl.toString();
+        if (currentProvider.equals("google.com")) {
+            navHeaderName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
 
-        String newResImage = photoPath.replace(originalPieceOfUrl, newPieceOfUrlToAdd);
+            Uri photoUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+            String originalPieceOfUrl = "s96-c/photo.jpg";
+            String newPieceOfUrlToAdd = "s400-c/photo.jpg";
+            if (photoUrl != null) {
+                String photoPath = photoUrl.toString();
+                String newResImage = photoPath.replace(originalPieceOfUrl, newPieceOfUrlToAdd);
 
-        Glide.with(this)
-                .load(newResImage)
-                .into(navHeaderPicture);
+                Glide.with(this)
+                        .load(newResImage)
+                        .into(navHeaderPicture);
+            }
+        } else {
+            navHeaderName.setText(mAuth.getCurrentUser().getEmail());
+        }
     }
 
 }

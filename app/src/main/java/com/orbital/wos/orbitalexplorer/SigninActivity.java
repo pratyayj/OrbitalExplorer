@@ -81,7 +81,6 @@ public class SigninActivity extends AppCompatActivity {
                                         Toast.makeText(SigninActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
                                     } else {
                                         startActivity(new Intent(SigninActivity.this, MainActivity.class));
-                                        finish();
                                     }
                                 }
                             });

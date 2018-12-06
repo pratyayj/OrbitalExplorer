@@ -194,6 +194,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         String tempTitle = tempPOI.getTitle();
                         String tempDescription = tempPOI.getDescription();
                         String tempPlaceID = tempPOI.getPlaceID();
+                        if (tempPlaceID == null) {
+                            tempPlaceID = "nothing";
+                        }
                         Intent intent = new Intent(MapsActivity.this, POIDisplayPopup.class);
                         intent.putExtra("poiTitle", tempTitle);
                         intent.putExtra("poiDescription", tempDescription);
@@ -249,6 +252,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             icon = getResources().getDrawable(R.drawable.ic_attraction_24dp);
         } else if (type.equals("photography")) {
             icon = getResources().getDrawable(R.drawable.ic_photography_24dp);
+        } else if (type.equals("service")) {
+            icon = getResources().getDrawable(R.drawable.ic_services_24dp);
         }
 
         BitmapDescriptor markerIcon = getMarkerIconFromDrawable(icon);
@@ -367,7 +372,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
             case R.id.rate:
                 DialogFragment newFragment = RatingFragment.newInstance();
+                Bundle bundleTitle = new Bundle();
+                bundleTitle.putString("title", trailTitle);
+                newFragment.setArguments(bundleTitle);
                 newFragment.show(getFragmentManager(), "dialog");
+                return true;
+            case R.id.share_tips:
+                Intent intent = new Intent(MapsActivity.this, TipsInputActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.read_tips:
+                Intent intent2 = new Intent(MapsActivity.this, TipsListActivity.class);
+                startActivity(intent2);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

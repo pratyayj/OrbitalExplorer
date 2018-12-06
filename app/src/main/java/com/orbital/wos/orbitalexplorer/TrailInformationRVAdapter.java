@@ -42,9 +42,12 @@ public class TrailInformationRVAdapter extends RecyclerView.Adapter<TrailInforma
     // The storage reference from which the image data is retrieved.
     private StorageReference photoStorageReference;
 
+    private DatabaseReference firebaseDatabaseRef = FirebaseDatabase.getInstance().getReference();
+
     public TrailInformationRVAdapter(Context context, List<TrailInformation> trailInformationList){
         this.mContext = context;
         this.trailInformationList = trailInformationList;
+
     }
 
     /**
@@ -73,12 +76,20 @@ public class TrailInformationRVAdapter extends RecyclerView.Adapter<TrailInforma
         trailInformationHolder.informationTitle.setText(trailInformation.getTitle());
         trailInformationHolder.informationDescription.setText(trailInformation.getDescription());
         trailInformationHolder.informationDescription.setVisibility(View.GONE);
+
+        getTotalRating(trailInformation.getTitle(), trailInformationHolder.informationRating);
+
+        /*
+
         if (trailInformation.getRating() != 0) {
             trailInformationHolder.informationRating.setRating(trailInformation.getRating());
         } else {
             trailInformationHolder.informationRating.setVisibility(View.GONE);
             trailInformationHolder.ratingTextView.setVisibility(View.GONE);
         }
+
+        */
+
         photoStorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(trailInformation.getPhotouri());
         Glide.with(mContext)
                 .load(photoStorageReference)
@@ -102,22 +113,18 @@ public class TrailInformationRVAdapter extends RecyclerView.Adapter<TrailInforma
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 final String trailSelectedTitle = trailInformation.getTitle();
                 DatabaseReference userdataDBR = FirebaseDatabase.getInstance().getReference().child("userdata");
-                final DatabaseReference trailcountDBR = FirebaseDatabase.getInstance().getReference().child("trailcount");
+
+                final DatabaseReference baseDBR = FirebaseDatabase.getInstance().getReference().child("trailuserdata")
+                        .child(trailSelectedTitle);
+                final DatabaseReference trailcountDBR = FirebaseDatabase.getInstance().getReference().child("trailuserdata")
+                        .child(trailSelectedTitle).child("trailcount");
 
                 trailcountDBR.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.child(trailSelectedTitle).exists()) {
-                            Map<String, Object> currentCount = (Map<String, Object>) dataSnapshot.getValue();
-                            long currentCountI;
-                            currentCountI = (long) currentCount.get(trailSelectedTitle);
-                            currentCountI += 1.0;
-                            trailcountDBR.child(trailSelectedTitle).setValue(currentCountI);
-                        } else {
-                            Map<String, Object> trial = new HashMap<>();
-                            trial.put(trailSelectedTitle, 1);
-                            trailcountDBR.updateChildren(trial);
-                        }
+                        long count = dataSnapshot.getValue(Long.class);
+                        count+=1.0;
+                        baseDBR.child("trailcount").setValue(count);
                     }
 
                     @Override
@@ -205,6 +212,43 @@ public class TrailInformationRVAdapter extends RecyclerView.Adapter<TrailInforma
         public void setRecyclerViewClickListener(RecyclerViewClickListener rvcl) {
             this.recyclerViewClickListener = rvcl;
         }
+    }
+
+    private void getTotalRating(final String trailName, final RatingBar toSet) {
+
+        firebaseDatabaseRef.child("trailuserdata").child(trailName).child("totalrating").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                float totalRating = dataSnapshot.getValue(Float.class);
+                getTotalRaters(trailName, totalRating, toSet);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void getTotalRaters(final String trailName, final Float totalRating, final RatingBar toSet) {
+
+        firebaseDatabaseRef.child("trailuserdata").child(trailName).child("numberofraters").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                float totalRaters = dataSnapshot.getValue(Float.class);
+                setRatingValue(totalRating, totalRaters, toSet, trailName);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void setRatingValue(float totalRating, float totalRaters, RatingBar toSet, String trailName) {
+        toSet.setRating( totalRating / totalRaters);
+        // Toast.makeText(mContext, "Total rating" + totalRating + "total raters" + totalRaters + trailName, Toast.LENGTH_LONG).show();
     }
 
 }

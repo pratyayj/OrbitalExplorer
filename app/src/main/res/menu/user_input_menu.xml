@@ -5,7 +5,7 @@
         android:title="Rate trail"
         android:icon="@drawable/ic_stars_rating_24dp"
         app:showAsAction="never"/>
-    <item android:id="@+id/review"
+    <item android:id="@+id/share_tips"
         android:title="Share tips"
         android:icon="@drawable/ic_tips_review_24dp"
         app:showAsAction="never"/>

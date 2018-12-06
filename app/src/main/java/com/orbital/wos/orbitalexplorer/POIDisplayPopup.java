@@ -172,33 +172,37 @@ public class POIDisplayPopup extends AppCompatActivity {
      * @param placeId PlaceID of location whose data will be obtained.
      */
     private void getPhotos(GeoDataClient mGeoDataClient, String placeId) {
-        final GeoDataClient localGeoDataClient = mGeoDataClient;
-        final Task<PlacePhotoMetadataResponse> photoMetadataResponse = localGeoDataClient.getPlacePhotos(placeId);
-        photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
-            @Override
-            public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
-                // Get the list of photos.
-                PlacePhotoMetadataResponse photos = task.getResult();
-                // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
-                PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
-                // Get the first photo in the list.
-                PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
-                // Get the attribution text.
-                CharSequence attribution = photoMetadata.getAttributions();
-                // Get a full-size bitmap for the photo.
-                Task<PlacePhotoResponse> photoResponse = localGeoDataClient.getPhoto(photoMetadata);
-                photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
-                    @Override
-                    public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
-                        PlacePhotoResponse photo = task.getResult();
-                        Bitmap bitmap = photo.getBitmap();
-                        Context context = getApplicationContext();
-                        // Proceed to load obtained image to ImageView.
-                        loadPhoto(bitmap);
-                    }
-                });
-            }
-        });
+        if (placeId.equals("nothing")) {
+
+        } else {
+            final GeoDataClient localGeoDataClient = mGeoDataClient;
+            final Task<PlacePhotoMetadataResponse> photoMetadataResponse = localGeoDataClient.getPlacePhotos(placeId);
+            photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
+                @Override
+                public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
+                    // Get the list of photos.
+                    PlacePhotoMetadataResponse photos = task.getResult();
+                    // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
+                    PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
+                    // Get the first photo in the list.
+                    PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
+                    // Get the attribution text.
+                    CharSequence attribution = photoMetadata.getAttributions();
+                    // Get a full-size bitmap for the photo.
+                    Task<PlacePhotoResponse> photoResponse = localGeoDataClient.getPhoto(photoMetadata);
+                    photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
+                        @Override
+                        public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
+                            PlacePhotoResponse photo = task.getResult();
+                            Bitmap bitmap = photo.getBitmap();
+                            Context context = getApplicationContext();
+                            // Proceed to load obtained image to ImageView.
+                            loadPhoto(bitmap);
+                        }
+                    });
+                }
+            });
+        }
     }
 
     /**

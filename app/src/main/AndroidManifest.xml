@@ -41,7 +41,9 @@
         <activity
             android:name=".POIDisplayPopup"
             android:theme="@style/PopUpTheme" />
-        <activity android:name=".GroupDisplayActivity"></activity>
+        <activity android:name=".GroupDisplayActivity" />
+        <activity android:name=".TipsInputActivity" />
+        <activity android:name=".TipsListActivity"></activity>
     </application>
 
 </manifest>
