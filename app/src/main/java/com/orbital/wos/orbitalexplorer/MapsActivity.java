@@ -66,19 +66,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    private GoogleMap mMap;
-    private GoogleApiClient client;
-    private LocationRequest locationRequest;
+    private ArrayList<PointsOfInterest> poiArray;
     private double latitudeStart;
     private double longitudeStart;
-    private String trailTitle;
-    private int numberpoi;
-
     private FirebaseDatabase firebaseDatabase;
+    private GoogleMap mMap;
+    private GoogleApiClient client;
+    private int numberpoi;
+    private LocationRequest locationRequest;
+    private Location lastLocation;
+    private Marker currentLocationMarker;
     private MapsPOICallback mapsPOICallback;
+    private String trailTitle;
 
-    ArrayList<PointsOfInterest> poiArray;
     public static final int REQUEST_LOCATION_CODE = 99;
+    public static final String NO_PLACE_ID = "NOTHING";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,9 +91,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             checkLocationPermission();
         }
 
+        poiArray = new ArrayList<>();
+
         final String apiKey = getString(R.string.google_api_key);
 
-        poiArray = new ArrayList<>();
+        firebaseDatabase = FirebaseDatabase.getInstance("https://orbitalexplorer-206609.firebaseio.com/");
 
         // Callback object that is called whenever a point of interest is created.
         mapsPOICallback = new MapsPOICallback() {
@@ -101,14 +105,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 poiArray.add(pointOfInterest);
                 Collections.sort(poiArray, new POIComparator());
 
-                /* Once all the points have been added, this section of the code - i.e. the creation
-                 * of the actual trail path - will be executed.
-                 */
+                // Once all the points have been added, this section of the code - i.e. the creation of the actual trail path - will be executed.
                 if (poiArray.size() > numberpoi) {
-
                     ArrayList<LatLng> latLngArrayList = new ArrayList<>();
-                    for (PointsOfInterest poi : poiArray) {
-                        LatLng temp = new LatLng(poi.getLatitude(), poi.getLongitude());
+                    for (PointsOfInterest x : poiArray) {
+                        LatLng temp = new LatLng(x.getLatitude(), x.getLongitude());
                         latLngArrayList.add(temp);
                     }
 
@@ -117,24 +118,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         FetchUrl fetchUrl = new FetchUrl();
                         fetchUrl.execute(url);
                     }
-
                 }
             }
         };
 
-        /**
-         * This group of method calls and assignments relate to
-         * the ActionBar and ToolBar.
-         */
+        // The following method call pertain to the set up of the ActionBar and ToolBar.
         toolbarAssignment(R.drawable.ic_arrow_back_grey_24dp);
-        firebaseDatabase = FirebaseDatabase.getInstance("https://orbitalexplorer-206609.firebaseio.com/");
 
         Intent intent = getIntent();
         latitudeStart = intent.getDoubleExtra("latitude", 0);
         longitudeStart = intent.getDoubleExtra("longitude", 0);
         trailTitle = intent.getStringExtra("title");
         numberpoi = intent.getIntExtra("numberpoi", 0);
-
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -176,6 +171,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .position(trailStart)
                 .title("Start here.")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+
         startMarker.setTag("start");
         mMap.moveCamera(CameraUpdateFactory.newLatLng(trailStart));
 
@@ -186,7 +182,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public boolean onMarkerClick(Marker marker) {
                 for (int i = 0; i < poiArray.size(); i++) {
                     if (marker.getTag().equals(poiArray.get(i))) {
-                        // TO PASS AS AN OBJECT
+                        // TODO: Pass the POI as an object to listener instead of as extras
                         PointsOfInterest tempPOI = (PointsOfInterest) marker.getTag();
                         String tempTitle = tempPOI.getTitle();
                         String tempDescription = tempPOI.getDescription();
@@ -209,7 +205,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     * This method retrieves/gets the points of interests from the Firebase database.
+     * This method retrieves asynchronously the points of interests from the Firebase database.
      * @param mapsPOICallback The callback that will be performed when this method is called.
      */
     protected void getPointsOfInterestFirebase(final MapsPOICallback mapsPOICallback) {
@@ -234,7 +230,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     * This method creates a marker for the point of interest on the map.
+     * This method manipulates the display by
+     * creating a marker for the point of interest on the map.
+     *
      * @param poi The point of interest to be marked on to the map.
      */
     protected void createPoints (PointsOfInterest poi) {
@@ -271,40 +269,33 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         client.connect();
     }
 
-    // method for LocationListener
+    /**
+     * This method handles changes in location and how the map display should change accordingly.
+     */
     @Override
     public void onLocationChanged(Location location) {
-        lastLocation = location; // current location
+        lastLocation = location; // Current location
 
-        if (currentLocationMarker != null) { // removes old marker
+        if (currentLocationMarker != null) { // Removes old marker
             currentLocationMarker.remove();
         }
 
         LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
 
-        // move the camera to the location
-        float zoomLevel = 7.5f; //This goes up to 21
-
-        /*
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(latlng)
-                    .zoom(15)
-                    .bearing(lastLocation.getBearing())
-                    .tilt(0)
-                    .build();
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        */
+        float zoomLevel = 7.5f;
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, zoomLevel));
         mMap.animateCamera(CameraUpdateFactory.zoomBy(10));
 
-        // if there is a client, we want to stop location update after setting location to client
+        // If there is a client, we want to stop location update after setting location to client
         if (client != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(client, this);
         }
     }
 
-    // method for GoogleApiClient.ConnectionCallbacks
+    /**
+     * This method handles what the map should display upon connection.
+     */
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         locationRequest = new LocationRequest();
@@ -323,22 +314,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) { // if app asked before and the user said no
+            // If app asked before and the user said no
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_CODE);
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_CODE);
-            } return false; // don't ask again option when it previously asked
+            } return false; // Don't ask again option when it previously asked
         } else {
             return true;
         }
     }
 
+    // TODO: This method should be overridden to handle Google Maps connection suspension
     @Override
     public void onConnectionSuspended(int i) {
 
     }
 
-    // method for GoogleApiClient.OnConnectionFailedListener,
+    // TODO: This method should be overridden to handle Google Maps connection failures
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
@@ -365,7 +358,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         switch (item.getItemId()) {
             case android.R.id.home:
                 this.finish();
-                //overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
                 return true;
             case R.id.rate:
                 DialogFragment newFragment = RatingFragment.newInstance();
@@ -406,7 +398,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 } return;
         }
     }
-
 
     /**
      * This method creates the URL that is to be used to retrieve the JSON data regarding directions.
@@ -581,7 +572,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 lineOptions.color(R.color.purpleHM);
 
                 Log.d("onPostExecute","onPostExecute lineoptions decoded");
-
             }
 
             // Drawing polyline in the Google Map for the i-th route
@@ -614,6 +604,5 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         inflater.inflate(R.menu.user_input_menu, menu);
         return true;
     }
-
 
 }
