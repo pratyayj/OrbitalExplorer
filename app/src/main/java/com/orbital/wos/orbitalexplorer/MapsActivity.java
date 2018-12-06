@@ -69,8 +69,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private GoogleApiClient client;
     private LocationRequest locationRequest;
-    private Location lastLocation;
-    private Marker currentLocationMarker;
     private double latitudeStart;
     private double longitudeStart;
     private String trailTitle;
@@ -103,13 +101,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 poiArray.add(pointOfInterest);
                 Collections.sort(poiArray, new POIComparator());
 
-                // Once all the points have been added, this section of the code - i.e. the creation
-                // of the actual trail path - will be executed.
+                /* Once all the points have been added, this section of the code - i.e. the creation
+                 * of the actual trail path - will be executed.
+                 */
                 if (poiArray.size() > numberpoi) {
 
                     ArrayList<LatLng> latLngArrayList = new ArrayList<>();
-                    for (PointsOfInterest x : poiArray) {
-                        LatLng temp = new LatLng(x.getLatitude(), x.getLongitude());
+                    for (PointsOfInterest poi : poiArray) {
+                        LatLng temp = new LatLng(poi.getLatitude(), poi.getLongitude());
                         latLngArrayList.add(temp);
                     }
 
@@ -118,8 +117,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         FetchUrl fetchUrl = new FetchUrl();
                         fetchUrl.execute(url);
                     }
-
-                } else {
 
                 }
             }
